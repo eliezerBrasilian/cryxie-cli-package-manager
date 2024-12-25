@@ -1,31 +1,17 @@
-package alpine.java.mail;
+package alpine.crixie.cli;
 
 import picocli.CommandLine;
 
 public class Main {
     public static void main(String[] args) {
-        var _args = new String[]{"crixie", "install", "cebola"};
 
-        int exitCode = new CommandLine(new RootCommand()).execute(args);
+        int exitCode = new CommandLine(new CliCommand()).execute(args);
         System.exit(exitCode);
     }
 }
 
 @CommandLine.Command(
-        name = "root",
-        description = "Root Command for Crixie CLI",
-        subcommands = {CrixieCommand.class}
-)
-class RootCommand implements Runnable {
-
-    @Override
-    public void run() {
-        System.out.println("Use o comando 'crixie' seguido de uma ação. Exemplo: 'crixie install <pacote>'.");
-    }
-}
-
-@CommandLine.Command(
-        name = "crixie",
+        name = "crixie", //bat file
         description = "Crixie CLI - Gerenciador de pacotes e ferramentas",
         mixinStandardHelpOptions = true,
         version = "Crixie CLI 1.0.0",
@@ -33,7 +19,7 @@ class RootCommand implements Runnable {
                 InstallCommand.class,
         }
 )
-class CrixieCommand implements Runnable {
+class CliCommand implements Runnable {
 
     @Override
     public void run() {
