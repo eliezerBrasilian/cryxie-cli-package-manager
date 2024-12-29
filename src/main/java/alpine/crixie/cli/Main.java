@@ -11,7 +11,7 @@ public class Main {
 }
 
 @CommandLine.Command(
-        name = "crixie", //bat file
+        name = "cryxie", //bat file
         description = "Crixie CLI - Gerenciador de pacotes e ferramentas",
         mixinStandardHelpOptions = true,
         version = "Crixie CLI 1.0.0",
