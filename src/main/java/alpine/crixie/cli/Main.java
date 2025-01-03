@@ -23,7 +23,8 @@ public class Main {
         version = "Crixie CLI 1.0.0",
         subcommands = {
                 InstallCommand.class,
-                InitCommand.class
+                InitCommand.class,
+                CommandLine.HelpCommand.class // Subcomando para exibir ajuda de outros comandos
         }
 )
 class CliCommand implements Runnable {
@@ -36,13 +37,13 @@ class CliCommand implements Runnable {
 
 @CommandLine.Command(
         name = "init",
-        description = "Inicializa um projeto com o arquivo package.txt"
+        description = "Inicializa um projeto com o arquivo package.lua"
 )
 class InitCommand implements Runnable {
 
     @CommandLine.Option(
             names = {"-skip"},
-            description = "Cria o arquivo package.txt com valores padrão."
+            description = "Cria o arquivo package.lua com valores padrão."
     )
     private boolean skip;
 
