@@ -16,7 +16,7 @@ public class Main {
 }
 
 @CommandLine.Command(
-       // name = "cryxie", //bat file
+        //name = "cryxie", //bat file
         name = "teste",
         description = "Crixie CLI - Gerenciador de pacotes e ferramentas",
         mixinStandardHelpOptions = true,
@@ -31,19 +31,19 @@ class CliCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Bem-vindo ao Crixie CLI! Use --help para ver os comandos disponíveis.");
+        System.out.println("Welcome to Crixie CLI! Use --help to see available commands.");
     }
 }
 
 @CommandLine.Command(
         name = "init",
-        description = "Inicializa um projeto com o arquivo package.lua"
+        description = "Initialize a project with the package.lua file"
 )
 class InitCommand implements Runnable {
 
     @CommandLine.Option(
             names = {"-skip"},
-            description = "Cria o arquivo package.lua com valores padrão."
+            description = "Creates package.lua file with default values."
     )
     private boolean skip;
 
@@ -54,8 +54,6 @@ class InitCommand implements Runnable {
 
         try {
             if (newFile.createNewFile()) {
-                System.out.println("O arquivo '" + newFile.getName() + "' foi criado no diretório atual: " + currentDir);
-
                 // Escrever dados no arquivo
                 try (FileWriter writer = new FileWriter(newFile)) {
                     if (skip) {
@@ -66,13 +64,13 @@ class InitCommand implements Runnable {
                                 "\n" +
                                 "Name = \"default\"\n" +
                                 "Version = \"0.0.1\"\n");
-                        System.out.println("Arquivo criado com configurações padrão.");
+                        System.out.println("Environment has been set up");
                     } else {
                         // Solicita informações ao usuário
                         Scanner scanner = new Scanner(System.in);
-                        System.out.print("Informe o nome do pacote: ");
+                        System.out.print("Enter the package name: ");
                         String packageName = scanner.nextLine();
-                        System.out.print("Informe a versão: ");
+                        System.out.print("Enter the version: ");
                         String version = scanner.nextLine();
 
                         // Escreve as informações fornecidas no arquivo
@@ -84,14 +82,12 @@ class InitCommand implements Runnable {
                                 "Version = \"" + version + "\"\n" +
                                 "\n" +
                                 "Dependencies = {}");
-                        System.out.println("Arquivo criado com as configurações fornecidas.");
+                        System.out.println("Environment has been set up");
                     }
                 }
-            } else {
-                System.out.println("O arquivo '" + newFile.getName() + "' já existe no diretório atual: " + currentDir);
             }
         } catch (IOException e) {
-            System.err.println("Erro ao criar o arquivo: " + e.getMessage());
+            System.err.println("error setting up environment: " + e.getMessage());
         }
 
     }
@@ -102,11 +98,11 @@ class InitCommand implements Runnable {
 // Comando: instalar pacotes
 @CommandLine.Command(
         name = "install",
-        description = "Instalar um pacote especificado."
+        description = "Install a specified package."
 )
 class InstallCommand implements Runnable {
 
-    @CommandLine.Parameters(paramLabel = "<packageName>", description = "Nome do pacote a ser instalado.")
+    @CommandLine.Parameters(paramLabel = "<packageName>", description = "Name of the package to be installed.")
     private String packageName;
 
     @Override
