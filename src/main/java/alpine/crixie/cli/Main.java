@@ -18,9 +18,9 @@ public class Main {
 @CommandLine.Command(
         //name = "cryxie", //bat file
         name = "teste",
-        description = "Crixie CLI - Gerenciador de pacotes e ferramentas",
+        description = "Crixie CLI - User Friendly Java Package Manager",
         mixinStandardHelpOptions = true,
-        version = "Crixie CLI 1.0.0",
+        version = "1.0.0",
         subcommands = {
                 InstallCommand.class,
                 InitCommand.class,
