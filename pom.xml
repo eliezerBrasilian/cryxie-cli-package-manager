@@ -14,6 +14,13 @@
             <artifactId>picocli</artifactId>
             <version>4.7.6</version>
         </dependency>
+        <dependency>
+            <groupId>mainclass-generator</groupId>
+            <artifactId>mainclass-generator</artifactId>
+            <version>not-provided</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/cryxie_libs/mainclass-generator.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>

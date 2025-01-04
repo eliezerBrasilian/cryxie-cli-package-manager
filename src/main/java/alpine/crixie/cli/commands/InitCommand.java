@@ -1,5 +1,6 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.components.PackageLuaComponent;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -21,46 +22,32 @@ public class InitCommand implements Runnable {
 
     @Override
     public void run() {
-        String currentDir = System.getProperty("user.dir");
-        File newFile = new File(currentDir, "package.lua");
-
-        try {
-            if (newFile.createNewFile()) {
-                // Escrever dados no arquivo
-                try (FileWriter writer = new FileWriter(newFile)) {
-                    if (skip) {
-                        // Conteúdo padrão
-                        writer.write("---\n" +
-                                "--- Config related to your package in cryxie\n" +
-                                "---\n" +
-                                "\n" +
-                                "Name = \"default\"\n" +
-                                "Version = \"0.0.1\"\n");
-                        System.out.println("Environment has been set up");
-                    } else {
-                        // Solicita informações ao usuário
-                        Scanner scanner = new Scanner(System.in);
-                        System.out.print("Enter the package name: ");
-                        String packageName = scanner.nextLine();
-                        System.out.print("Enter the version: ");
-                        String version = scanner.nextLine();
-
-                        // Escreve as informações fornecidas no arquivo
-                        writer.write("---\n" +
-                                "--- Config related to your package in cryxie\n" +
-                                "---\n" +
-                                "\n" +
-                                "Name = \"" + packageName + "\"\n" +
-                                "Version = \"" + version + "\"\n" +
-                                "\n" +
-                                "Dependencies = {}");
-                        System.out.println("Environment has been set up");
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("error setting up environment: " + e.getMessage());
+        if (skip) {
+            new PackageLuaComponent();
+        } else {
+            generateCustomLuaComponent();
         }
-
+        System.out.println("Environment has been set up");
     }
+
+    private static void generateCustomLuaComponent() {
+        var scanner = new Scanner(System.in);
+        System.out.print("Enter the package name: ");
+        String packageName = scanner.nextLine();
+
+        System.out.print("Enter the description: ");
+        String desc = scanner.nextLine();
+
+        System.out.print("Enter the version: ");
+        String version = scanner.nextLine();
+
+        System.out.print("Enter the url of your project repository : ");
+        String repoUrl = scanner.nextLine();
+
+        System.out.print("Do you want generate a full project?(Y)(N) : ");
+        String generateProject = scanner.nextLine();
+
+        new PackageLuaComponent(packageName,version,repoUrl,desc,generateProject);
+    }
+
 }
