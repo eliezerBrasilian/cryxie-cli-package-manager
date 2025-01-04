@@ -1,6 +1,7 @@
 package alpine.crixie.cli.utiities;
 
 import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
@@ -14,6 +15,10 @@ public class PackageLuaModifier {
 
      private final Globals globals;
      private final LuaTable dependenciesTable;
+     private String name;
+     private String description;
+     private String version;
+     private String repositoryUrl;
 
     public static PackageLuaModifier getInstance() throws FileNotFoundException {
         final String  luaFilePath = "package.lua";
@@ -48,6 +53,35 @@ public class PackageLuaModifier {
                 globals.set("Dependencies", mainTable);
             }
             dependenciesTable = mainTable;
+
+            LuaString nameT = (LuaString) globals.get("Name");
+            if (nameT.equals(LuaValue.NIL)) {
+                nameT = LuaString.valueOf("");
+                globals.set("Name", nameT);
+            }
+            name = nameT.tojstring();
+
+            LuaString descT = (LuaString) globals.get("Description");
+            if (descT.equals(LuaValue.NIL)) {
+                descT = LuaString.valueOf("");
+                globals.set("Description", descT);
+            }
+            description = descT.tojstring();
+
+            LuaString versionT = (LuaString) globals.get("Version");
+            if (versionT.equals(LuaValue.NIL)) {
+                versionT = LuaString.valueOf("");
+                globals.set("Version", versionT);
+            }
+            version = versionT.tojstring();
+
+            LuaString repoT = (LuaString) globals.get("RepositoryUrl");
+            if (repoT.equals(LuaValue.NIL)) {
+                repoT = LuaString.valueOf("");
+                globals.set("RepositoryUrl", repoT);
+            }
+            repositoryUrl = repoT.tojstring();
+
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao carregar o arquivo Lua", e);
@@ -86,10 +120,11 @@ public class PackageLuaModifier {
         StringBuilder content = new StringBuilder();
 
         content.append("-- Config related to your package in cryxie\n\n");
-        content.append("Name = \"\"\n");
-        content.append("Description = \"\"\n");
-        content.append("Version = \"0.0.1\"\n");
-        content.append("RepositoryUrl = \"\"\n\n");
+
+        content.append("Name = \"").append(name).append("\"\n");
+        content.append("Description = \"").append(description).append("\"\n");
+        content.append("Version = \"").append(version).append("\"\n");
+        content.append("RepositoryUrl = \"").append(repositoryUrl).append("\"\n");
 
         content.append("Dependencies = {\n");
         for (LuaValue key : dependenciesTable.keys()) {

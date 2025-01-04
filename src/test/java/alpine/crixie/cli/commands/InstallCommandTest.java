@@ -28,7 +28,7 @@ class InstallCommandTest {
         PackageLuaModifier modifier = PackageLuaModifier.getInstance();
 
         // Adicionando dependência
-        modifier.addDependency("cebola", "1.0.1");
+        modifier.addDependency("picaru", "1.0.1");
     }
 
    @Test
