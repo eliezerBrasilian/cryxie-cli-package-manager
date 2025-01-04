@@ -27,7 +27,17 @@ public class InitCommand implements Runnable {
         } else {
             generateCustomLuaComponent();
         }
+        createCryxieLibsDirectory();
         System.out.println("Environment has been set up");
+    }
+
+    private static void createCryxieLibsDirectory(){
+        String currentDir = System.getProperty("user.dir");
+
+        var libsDirectory = new File(currentDir, "cryxie_libs");
+        if (!libsDirectory.mkdirs()) {
+            System.out.println("directory cryxie_libs couldn't be created");
+        }
     }
 
     private static void generateCustomLuaComponent() {
