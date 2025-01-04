@@ -36,13 +36,6 @@
       <version>RELEASE</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>alpine_central_email_file_manager.jar</groupId>
-      <artifactId>alpine_central_email_file_manager.jar</artifactId>
-      <version>not-provided</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/cryxie_libs/alpine_central_email_file_manager.jar</systemPath>
-    </dependency>
   </dependencies>
   <build>
     <plugins>

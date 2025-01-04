@@ -10,46 +10,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.Iterator;
+import java.util.List;
 
 public class PomXmlModifier {
     private String jarName;
-
-    public  PomXmlModifier jarFileName(String jarFileName){
-        if(jarFileName.trim().isEmpty()){
-            throw new InvalidParameterException("jar file name can not be null or empty");
-        }
-        this.jarName = jarFileName;
-        return this;
-    }
-    
-    public void modify() {
-        String jarFilePath = "cryxie_libs/" + jarName;
-
-        try {
-            // Lê o POM existente
-            File pomFile = new File("pom.xml");
-            SAXBuilder saxBuilder = new SAXBuilder();
-            Document document = saxBuilder.build(pomFile);
-
-            // Obtém o elemento raiz
-            Element projectElement = document.getRootElement();
-
-            Element dependenciesElement = getDependenciesTag(projectElement);
-            // Adiciona uma quebra de linha antes, se necessário
-            dependenciesElement.addContent("\n    ");
-
-            // Adiciona a dependência à lista de dependências
-            dependenciesElement.addContent(addNewDependency(projectElement, jarName, jarFilePath));
-
-            // Adiciona uma quebra de linha após a dependência
-            dependenciesElement.addContent("\n");
-
-            saveModifications(document);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private static Element getDependenciesTag(Element projectElement) {
         // Localiza ou cria a tag <dependencies>
@@ -92,4 +57,76 @@ public class PomXmlModifier {
         dependency.addContent(systemPath);
         return dependency;
     }
+
+    public PomXmlModifier jarFileName(String jarFileName) {
+        if (jarFileName.trim().isEmpty()) {
+            throw new InvalidParameterException("jar file name can not be null or empty");
+        }
+        this.jarName = jarFileName;
+        return this;
+    }
+
+    public void modify() {
+        String jarFilePath = "cryxie_libs/" + jarName;
+
+        try {
+            // Lê o POM existente
+            File pomFile = new File("pom.xml");
+            SAXBuilder saxBuilder = new SAXBuilder();
+            Document document = saxBuilder.build(pomFile);
+
+            // Obtém o elemento raiz
+            Element projectElement = document.getRootElement();
+
+            Element dependenciesElement = getDependenciesTag(projectElement);
+            // Adiciona uma quebra de linha antes, se necessário
+            dependenciesElement.addContent("\n    ");
+
+            // Adiciona a dependência à lista de dependências
+            dependenciesElement.addContent(addNewDependency(projectElement, jarName, jarFilePath));
+
+            // Adiciona uma quebra de linha após a dependência
+            dependenciesElement.addContent("\n");
+
+            saveModifications(document);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeDependency() {
+        try {
+            // Lê o POM existente
+            File pomFile = new File("pom.xml");
+            SAXBuilder saxBuilder = new SAXBuilder();
+            Document document = saxBuilder.build(pomFile);
+
+            // Obtém o elemento raiz
+            Element projectElement = document.getRootElement();
+            Element dependenciesElement = projectElement.getChild("dependencies", projectElement.getNamespace());
+
+            if (dependenciesElement != null) {
+                // Localiza a dependência com o jarName especificado
+                List<Element> dependencies = dependenciesElement.getChildren("dependency", projectElement.getNamespace());
+                for (Iterator<Element> iterator = dependencies.iterator();
+                     iterator.hasNext();
+                     ) {
+                    Element dependency = iterator.next();
+                    Element artifactId = dependency.getChild("artifactId", projectElement.getNamespace());
+                    if (artifactId != null && jarName.equals(artifactId.getText())) {
+                        iterator.remove(); // Remove a dependência encontrada
+                        break;
+                    }
+                }
+            }
+
+            // Salva as modificações no POM
+            saveModifications(document);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

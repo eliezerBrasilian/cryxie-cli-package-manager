@@ -1,7 +1,6 @@
 package alpine.crixie.cli.commands;
 
 
-import alpine.central.config.manager.LuaFileReader;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.PomXmlModifier;
 import org.jdom2.Document;
@@ -18,10 +17,11 @@ import java.io.FileWriter;
 
 class InstallCommandTest {
 
-
     @Test
     void removerPacoteDoPomXml(){
-        new PomXmlModifier().jarFileName("alpine_central_email_file_manager.jar").modify();
+        new PomXmlModifier().
+                jarFileName("alpine_central_email_file_manager.jar")
+                .removeDependency();
     }
 
     @Test
@@ -30,15 +30,14 @@ class InstallCommandTest {
     }
 
     @Test
-    void adicionaPacoteAoPackageLua() throws FileNotFoundException {
+    void adicionaDependenciaAoPackageLua() throws FileNotFoundException {
         PackageLuaModifier modifier = PackageLuaModifier.getInstance();
 
-        // Adicionando dependência
         modifier.addDependency("picaru", "1.0.1");
     }
 
     @Test
-    void removerPackageDoLua() throws FileNotFoundException {
+    void removeDependenciaDoPackageLua() throws FileNotFoundException {
         PackageLuaModifier modifier = PackageLuaModifier.getInstance();
 
         // Adicionando dependência
