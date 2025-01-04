@@ -18,6 +18,12 @@ import java.io.FileWriter;
 
 class InstallCommandTest {
 
+
+    @Test
+    void removerPacoteDoPomXml(){
+        new PomXmlModifier().jarFileName("alpine_central_email_file_manager.jar").modify();
+    }
+
     @Test
      void adicionaPacoteAoPomXml(){
         new PomXmlModifier().jarFileName("alpine_central_email_file_manager.jar").modify();
@@ -29,6 +35,14 @@ class InstallCommandTest {
 
         // Adicionando dependência
         modifier.addDependency("picaru", "1.0.1");
+    }
+
+    @Test
+    void removerPackageDoLua() throws FileNotFoundException {
+        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+
+        // Adicionando dependência
+        modifier.removeDependency("cebola");
     }
 
    @Test

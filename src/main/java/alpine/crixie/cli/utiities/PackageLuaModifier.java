@@ -101,6 +101,24 @@ public class PackageLuaModifier {
         saveLuaFile();
     }
 
+    public void removeDependency(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("O nome da dependência não pode ser nulo ou vazio.");
+        }
+
+        // Remove a dependência da tabela Dependencies
+        LuaValue dependencyKey = LuaValue.valueOf(name);
+        if (!dependenciesTable.get(dependencyKey).isnil()) {
+            dependenciesTable.set(dependencyKey, LuaValue.NIL);
+
+            // Salva as mudanças no arquivo Lua
+            saveLuaFile();
+        } else {
+            System.out.println("Dependência '" + name + "' não encontrada.");
+        }
+    }
+
+
     private void saveLuaFile() {
         // Recria o arquivo Lua com as alterações
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
