@@ -54,10 +54,7 @@ public class InitCommand implements Runnable {
         System.out.print("Enter the url of your project repository : ");
         String repoUrl = scanner.nextLine();
 
-        System.out.print("Do you want generate a full project?(Y)(N) : ");
-        String generateProject = scanner.nextLine();
-
-        new PackageLuaComponent(packageName,version,repoUrl,desc,generateProject);
+        new PackageLuaComponent(packageName,version,repoUrl,desc);
     }
 
 }

@@ -3,9 +3,14 @@ package alpine.crixie.cli;
 import alpine.crixie.cli.commands.InitCommand;
 import alpine.crixie.cli.commands.InstallCommand;
 import picocli.CommandLine;
+//import alpine.central.config.manager.EmailConfig;
 
 public class Main {
     public static void main(String[] args) {
+
+
+
+
         @CommandLine.Command(
                 //name = "cryxie", //bat file
                 name = "teste",

@@ -16,6 +16,11 @@ public class PackageLuaComponent {
         _make(packageName,version, repoUrl,description,generateProject);
     }
 
+    public PackageLuaComponent(
+            String packageName, String version, String repoUrl,  String description){
+        _make(packageName,version, repoUrl,description,"N");
+    }
+
     private void _make(String packageName,
                        String version, String repoUrl,
                        String description, String generateProject){
