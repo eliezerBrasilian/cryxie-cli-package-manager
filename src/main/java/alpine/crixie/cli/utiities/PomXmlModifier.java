@@ -91,7 +91,7 @@ public class PomXmlModifier {
             saveModifications(document);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error on add package to pom.xml");
         }
     }
 
@@ -125,7 +125,7 @@ public class PomXmlModifier {
             saveModifications(document);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error on remove package from pom.xml");
         }
     }
 

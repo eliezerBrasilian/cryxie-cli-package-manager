@@ -14,13 +14,36 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-
 class InstallCommandTest {
+
+    @Test
+    void requisicao(){
+        new FileDownloader("package1").download1();
+    }
+
+    @Test
+    void url(){
+        String name = "cebola";
+        String version = "1.0.1";
+        System.out.println("http://localhost:4010/cryxie/api/v1/package/download?name=" + name +"?version=" + version);
+    }
+
+    @Test
+    void splitNameVersion(){
+        final String pesquisa = "machine @1.0.1";
+
+        if(pesquisa.contains("@")){
+            var name = pesquisa.split("@")[0].trim();
+            var version = pesquisa.split("@")[1];
+
+            int p = 0;
+        }
+    }
 
     @Test
     void download() throws FileNotFoundException {
         final String name = "machine";
-        new FileDownloader().downloadByName(name);
+        new FileDownloader(name).download();
         new PomXmlModifier().
                 name(name)
                 .add();

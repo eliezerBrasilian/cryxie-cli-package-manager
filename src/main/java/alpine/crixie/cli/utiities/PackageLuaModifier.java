@@ -88,9 +88,10 @@ public class PackageLuaModifier {
     }
 
     public void addDependency(String name, String version) {
-        int x = 2;
-        if (name == null || version == null) {
-            throw new IllegalArgumentException("Nome e versão não podem ser nulos.");
+        if(version == null)version = "@latest";
+
+        if (name == null) {
+            throw new IllegalArgumentException("Nomenão pode ser nulo.");
         }
 
         // Adiciona o nome e versão à tabela Dependencies
