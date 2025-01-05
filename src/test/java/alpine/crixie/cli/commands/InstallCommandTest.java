@@ -1,6 +1,7 @@
 package alpine.crixie.cli.commands;
 
-
+import alpine.crixie.cli.utiities.CryxieLibsDirectory;
+import alpine.crixie.cli.utiities.FileDownloader;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.PomXmlModifier;
 import org.jdom2.Document;
@@ -8,7 +9,6 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -18,15 +18,40 @@ import java.io.FileWriter;
 class InstallCommandTest {
 
     @Test
+    void download() throws FileNotFoundException {
+        final String name = "machine";
+        new FileDownloader().downloadByName(name);
+        new PomXmlModifier().
+                name(name)
+                .add();
+
+        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+        modifier.addDependency(name, "1.0.1");
+    }
+
+    @Test
+    void excluiPacoteDeCryxieLibsDirectory() throws FileNotFoundException {
+        new CryxieLibsDirectory().
+                jarFileName("alpine_central_email_file_manager.jar")
+                .remove();
+    }
+
+    @Test
     void removerPacoteDoPomXml(){
         new PomXmlModifier().
-                jarFileName("alpine_central_email_file_manager.jar")
-                .removeDependency();
+                name("alpine_central_email_file_manager.jar")
+                .remove();
     }
 
     @Test
      void adicionaPacoteAoPomXml(){
-        new PomXmlModifier().jarFileName("alpine_central_email_file_manager.jar").modify();
+//        new PomXmlModifier().
+//                name("alpine_central_email_file_manager.jar")
+//                .add();
+
+        new PomXmlModifier().
+                name("arquivo.jar")
+                .add();
     }
 
     @Test

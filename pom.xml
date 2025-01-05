@@ -6,6 +6,11 @@
   <version>1.0</version>
   <dependencies>
     <dependency>
+      <groupId>org.luaj</groupId>
+      <artifactId>luaj-jse</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+    <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
       <version>4.7.6</version>
@@ -35,6 +40,41 @@
       <artifactId>junit-jupiter</artifactId>
       <version>RELEASE</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>file.jar</groupId>
+      <artifactId>file.jar</artifactId>
+      <version>not-provided</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/cryxie_libs/file.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>arquivo.jar</groupId>
+      <artifactId>arquivo.jar</artifactId>
+      <version>not-provided</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/cryxie_libs/arquivo.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>picapau.jar</groupId>
+      <artifactId>picapau.jar</artifactId>
+      <version>not-provided</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/cryxie_libs/picapau.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>computer.jar</groupId>
+      <artifactId>computer.jar</artifactId>
+      <version>not-provided</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/cryxie_libs/computer.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>machine.jar</groupId>
+      <artifactId>machine.jar</artifactId>
+      <version>not-provided</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/cryxie_libs/machine.jar</systemPath>
     </dependency>
   </dependencies>
   <build>

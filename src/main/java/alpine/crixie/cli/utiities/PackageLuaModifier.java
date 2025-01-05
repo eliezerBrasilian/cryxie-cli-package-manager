@@ -7,7 +7,6 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
-import java.util.Objects;
 import java.util.Properties;
 
 public class PackageLuaModifier {

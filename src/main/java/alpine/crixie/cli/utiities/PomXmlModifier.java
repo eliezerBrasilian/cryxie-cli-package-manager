@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class PomXmlModifier {
-    private String jarName;
+    private String name;
 
     private static Element getDependenciesTag(Element projectElement) {
         // Localiza ou cria a tag <dependencies>
@@ -38,12 +38,12 @@ public class PomXmlModifier {
         }
     }
 
-    private static Element addNewDependency(Element projectElement, String jarName, String jarFilePath) {
+    private static Element addNewDependency(Element projectElement, String name, String jarFilePath) {
         // Cria a nova dependência
         Element dependency = new Element("dependency", projectElement.getNamespace());
 
-        Element groupId = new Element("groupId", projectElement.getNamespace()).setText(jarName);
-        Element artifactId = new Element("artifactId", projectElement.getNamespace()).setText(jarName);
+        Element groupId = new Element("groupId", projectElement.getNamespace()).setText(name);
+        Element artifactId = new Element("artifactId", projectElement.getNamespace()).setText(name);
         Element version = new Element("version", projectElement.getNamespace()).setText("not-provided");
         Element scope = new Element("scope", projectElement.getNamespace()).setText("system");
         Element systemPath = new Element("systemPath", projectElement.getNamespace())
@@ -58,16 +58,16 @@ public class PomXmlModifier {
         return dependency;
     }
 
-    public PomXmlModifier jarFileName(String jarFileName) {
-        if (jarFileName.trim().isEmpty()) {
+    public PomXmlModifier name(String name) {
+        if (name.trim().isEmpty()) {
             throw new InvalidParameterException("jar file name can not be null or empty");
         }
-        this.jarName = jarFileName;
+        this.name = name.concat(".jar");
         return this;
     }
 
-    public void modify() {
-        String jarFilePath = "cryxie_libs/" + jarName;
+    public void add() {
+        String jarFilePath = "cryxie_libs/" + name;
 
         try {
             // Lê o POM existente
@@ -83,7 +83,7 @@ public class PomXmlModifier {
             dependenciesElement.addContent("\n    ");
 
             // Adiciona a dependência à lista de dependências
-            dependenciesElement.addContent(addNewDependency(projectElement, jarName, jarFilePath));
+            dependenciesElement.addContent(addNewDependency(projectElement, name, jarFilePath));
 
             // Adiciona uma quebra de linha após a dependência
             dependenciesElement.addContent("\n");
@@ -95,7 +95,7 @@ public class PomXmlModifier {
         }
     }
 
-    public void removeDependency() {
+    public void remove() {
         try {
             // Lê o POM existente
             File pomFile = new File("pom.xml");
@@ -107,14 +107,14 @@ public class PomXmlModifier {
             Element dependenciesElement = projectElement.getChild("dependencies", projectElement.getNamespace());
 
             if (dependenciesElement != null) {
-                // Localiza a dependência com o jarName especificado
+                // Localiza a dependência com o name especificado
                 List<Element> dependencies = dependenciesElement.getChildren("dependency", projectElement.getNamespace());
                 for (Iterator<Element> iterator = dependencies.iterator();
                      iterator.hasNext();
                      ) {
                     Element dependency = iterator.next();
                     Element artifactId = dependency.getChild("artifactId", projectElement.getNamespace());
-                    if (artifactId != null && jarName.equals(artifactId.getText())) {
+                    if (artifactId != null && name.equals(artifactId.getText())) {
                         iterator.remove(); // Remove a dependência encontrada
                         break;
                     }
