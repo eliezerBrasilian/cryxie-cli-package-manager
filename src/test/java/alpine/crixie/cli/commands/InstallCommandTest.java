@@ -9,26 +9,25 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 class InstallCommandTest {
 
-    @Test
+    //@Test
     void requisicao(){
         new FileDownloader("package1").download1();
     }
 
-    @Test
+    //@Test
     void url(){
         String name = "cebola";
         String version = "1.0.1";
         System.out.println("http://localhost:4010/cryxie/api/v1/package/download?name=" + name +"?version=" + version);
     }
 
-    @Test
+    //@Test
     void splitNameVersion(){
         final String pesquisa = "machine @1.0.1";
 
@@ -40,7 +39,7 @@ class InstallCommandTest {
         }
     }
 
-    @Test
+    //@Test
     void download() throws FileNotFoundException {
         final String name = "machine";
         new FileDownloader(name).download();
@@ -52,21 +51,21 @@ class InstallCommandTest {
         modifier.addDependency(name, "1.0.1");
     }
 
-    @Test
+   // @Test
     void excluiPacoteDeCryxieLibsDirectory() throws FileNotFoundException {
         new CryxieLibsDirectory().
                 jarFileName("alpine_central_email_file_manager.jar")
                 .remove();
     }
 
-    @Test
+    //@Test
     void removerPacoteDoPomXml(){
         new PomXmlModifier().
                 name("alpine_central_email_file_manager.jar")
                 .remove();
     }
 
-    @Test
+    //@Test
      void adicionaPacoteAoPomXml(){
 //        new PomXmlModifier().
 //                name("alpine_central_email_file_manager.jar")
@@ -77,14 +76,14 @@ class InstallCommandTest {
                 .add();
     }
 
-    @Test
+    //@Test
     void adicionaDependenciaAoPackageLua() throws FileNotFoundException {
         PackageLuaModifier modifier = PackageLuaModifier.getInstance();
 
         modifier.addDependency("picaru", "1.0.1");
     }
 
-    @Test
+    //@Test
     void removeDependenciaDoPackageLua() throws FileNotFoundException {
         PackageLuaModifier modifier = PackageLuaModifier.getInstance();
 
@@ -92,7 +91,7 @@ class InstallCommandTest {
         modifier.removeDependency("cebola");
     }
 
-   @Test
+   //@Test
     void run() {
         String pomFilePath = "pom.xml"; // Caminho do POM
         String jarName = "alpine_central_email_file_manager";

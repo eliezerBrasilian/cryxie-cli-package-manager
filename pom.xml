@@ -53,6 +53,7 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/cryxie_libs/teste.jar</systemPath>
     </dependency>
+
   </dependencies>
   <build>
     <plugins>
