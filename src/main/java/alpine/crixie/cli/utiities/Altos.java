@@ -11,7 +11,7 @@ public class Altos {
         // Configurações do WebClient
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs()
-                        .maxInMemorySize(10 * 1024 * 1024)) // Buffer de 10 MB
+                        .maxInMemorySize(1000 * 1024 * 1024)) // Buffer de 10 MB
                 .build();
 
         CLIENT = WebClient.builder()

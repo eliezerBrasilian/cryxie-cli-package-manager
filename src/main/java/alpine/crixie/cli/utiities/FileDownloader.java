@@ -37,6 +37,15 @@ public class FileDownloader {
     }
 
     public void retryDownload(String passcode) {
+        // Aumentar o limite de buffer para 10 MB
+        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10 MB
+                .build();
+
+        WebClient client = WebClient.builder()
+                .exchangeStrategies(exchangeStrategies)
+                .baseUrl("http://localhost:4010")
+                .build();
 
         var body = new PasscodeRequest(passcode);
 
@@ -44,10 +53,13 @@ public class FileDownloader {
         try {
             CompletableFuture.supplyAsync(() -> {
                 try {
-                    Altos.post("/cryxie/api/v1/package/download?name=" + name + "&version=" + version, body)
-                            .bodyToMono(String.class) // Supondo que a resposta seja um JSON ou String
-                            .doOnNext(response -> System.out.println("Download completed successfully: " + response))
-                            .block(); // Bloqueia porque estamos fora do contexto reactor
+                    client.post()
+                            .uri("/cryxie/api/v1/package/download?name=" + name + "&version=" + version)
+                            .header("Content-Type", "application/json")
+                            .bodyValue(body)
+                            .exchangeToMono(this::handleResponse)
+                            .block(); // Aqui é permitido porque estamos fora do contexto reactor
+
                     return null;
                 } catch (Exception e) {
                     throw new RuntimeException("Error during download: " + e.getMessage(), e);
@@ -64,6 +76,7 @@ public class FileDownloader {
             return response.bodyToMono(String.class)
                     .map(body -> {
                         try {
+                            System.out.println("extracting");
                             // Extrair os bytes do JSON
                             ObjectMapper mapper = new ObjectMapper();
                             Map<String, Object> map = mapper.readValue(body, new TypeReference<>() {
