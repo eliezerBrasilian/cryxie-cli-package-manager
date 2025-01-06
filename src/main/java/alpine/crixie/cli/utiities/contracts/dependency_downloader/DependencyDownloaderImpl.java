@@ -1,6 +1,7 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
 import alpine.crixie.cli.utiities.FileDownloader;
+import alpine.crixie.cli.utiities.FileDownloader.PasswordCallback;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.PomXmlModifier;
 
@@ -12,28 +13,28 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
     String packageName;
     String version;
 
-    public DependencyDownloaderImpl(String pesquisa){
+    public DependencyDownloaderImpl(String pesquisa) {
         this.pesquisa = pesquisa;
         splitNameVersion();
     }
 
-    private void splitNameVersion(){
+    private void splitNameVersion() {
         packageName = pesquisa.trim();
 
-        if(pesquisa.contains("@")){
+        if (pesquisa.contains("@")) {
             packageName = pesquisa.split("@")[0].trim();
             version = pesquisa.split("@")[1];
         }
     }
 
     @Override
-    public void download() {
-        if(version == null || version.isEmpty()){
+    public void download(PasswordCallback callback) {
+        if (version == null || version.isEmpty()) {
             new FileDownloader(packageName)
-                    .download1();
-        }else{
-            new FileDownloader(packageName,version)
-                    .download1();
+                    .download1(callback);
+        } else {
+            new FileDownloader(packageName, version)
+                    .download1(callback);
         }
     }
 

@@ -1,7 +1,10 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.FileDownloader;
 import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyManager;
 import picocli.CommandLine;
+
+import java.util.Scanner;
 
 @CommandLine.Command(
         name = "install",
@@ -9,11 +12,21 @@ import picocli.CommandLine;
 )
 public class InstallCommand implements Runnable {
 
-    @CommandLine.Parameters(paramLabel = "<packageName>", description = "Name of the package to be installed.")
+    @CommandLine.Parameters(paramLabel = "<packageName@version>", description = "Name and optional version of the package to be installed. Format: pacote[@version].")
     private String packageName;
 
     @Override
     public void run() {
-        new DependencyManager(packageName).execute();
+        new DependencyManager(packageName).execute((String name, String version) -> {
+            var scanner = new Scanner(System.in);
+
+            System.out.print("Enter the passcode: ");
+            String passcode = scanner.nextLine();
+
+            new FileDownloader(name, version).retryDownload(passcode);
+
+            System.out.println(passcode);
+        });
     }
+
 }
