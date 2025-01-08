@@ -17,16 +17,15 @@ public class InstallCommand implements Runnable {
 
     @Override
     public void run() {
-        new DependencyManager(packageName).execute((String name, String version) -> {
-            var scanner = new Scanner(System.in);
+        new DependencyManager(packageName).
+                install((String name, String version) -> {
+                    var scanner = new Scanner(System.in);
 
-            System.out.print("Enter the passcode: ");
-            String passcode = scanner.nextLine();
+                    System.out.print("Enter the passcode: ");
+                    String passcode = scanner.nextLine();
 
-            new FileDownloader(name, version).retryDownload(passcode);
-
-            System.out.println(passcode);
-        });
+                    new FileDownloader(name, version).retryDownload(passcode);
+                });
     }
 
 }

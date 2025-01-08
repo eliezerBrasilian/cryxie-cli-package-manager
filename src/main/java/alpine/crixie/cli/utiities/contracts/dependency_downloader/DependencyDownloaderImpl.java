@@ -1,5 +1,6 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
+import alpine.crixie.cli.utiities.CryxieLibsDirectory;
 import alpine.crixie.cli.utiities.FileDownloader;
 import alpine.crixie.cli.utiities.FileDownloader.PasswordCallback;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
@@ -11,7 +12,7 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
     String pesquisa;
 
     String packageName;
-    String version;
+    String version = "latest";
 
     public DependencyDownloaderImpl(String pesquisa) {
         this.pesquisa = pesquisa;
@@ -29,20 +30,14 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
 
     @Override
     public void download(PasswordCallback callback) {
-        if (version == null || version.isEmpty()) {
-            new FileDownloader(packageName)
-                    .download1(callback);
-        } else {
-            new FileDownloader(packageName, version)
-                    .download1(callback);
-        }
+        new FileDownloader(packageName, version)
+                .download1(callback);
     }
 
     @Override
     public void addToPomXmlFile() {
-        new PomXmlModifier().
-                name(packageName)
-                .add();
+        new PomXmlModifier(packageName, version).
+                add();
     }
 
     @Override
@@ -54,5 +49,25 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
             throw new RuntimeException("was not possible to add dependency into package.lua");
 
         }
+    }
+
+    @Override
+    public void removeFromPomXmlFile() {
+        new PomXmlModifier(pesquisa)
+                .remove();
+    }
+
+    @Override
+    public void removePackageFromLuaFile() throws FileNotFoundException {
+        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+
+        modifier.removeDependency(packageName);
+    }
+
+    @Override
+    public void removePackageFromCryxieLibsDirectory() throws FileNotFoundException {
+        new CryxieLibsDirectory().
+                jarFileName(pesquisa)
+                .remove();
     }
 }

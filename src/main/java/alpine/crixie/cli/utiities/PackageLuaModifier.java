@@ -12,15 +12,15 @@ import java.util.Properties;
 public class PackageLuaModifier {
     private static PackageLuaModifier instance = null;
 
-     private final Globals globals;
-     private final LuaTable dependenciesTable;
-     private String name;
-     private String description;
-     private String version;
-     private String repositoryUrl;
+    private final Globals globals;
+    private final LuaTable dependenciesTable;
+    private String name;
+    private String description;
+    private String version;
+    private String repositoryUrl;
 
     public static PackageLuaModifier getInstance() throws FileNotFoundException {
-        final String  luaFilePath = "package.lua";
+        final String luaFilePath = "package.lua";
 
         if (instance == null) {
             File luaFile = new File(luaFilePath);
@@ -83,15 +83,15 @@ public class PackageLuaModifier {
 
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao carregar o arquivo Lua", e);
+            throw new RuntimeException("Error loading Lua file", e);
         }
     }
 
     public void addDependency(String name, String version) {
-        if(version == null)version = "@latest";
+        if (version == null) version = "@latest";
 
         if (name == null) {
-            throw new IllegalArgumentException("Nomenão pode ser nulo.");
+            throw new IllegalArgumentException("Name cannot be null.");
         }
 
         // Adiciona o nome e versão à tabela Dependencies
@@ -103,7 +103,7 @@ public class PackageLuaModifier {
 
     public void removeDependency(String name) {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("O nome da dependência não pode ser nulo ou vazio.");
+            throw new IllegalArgumentException("Dependency name cannot be null or empty.");
         }
 
         // Remove a dependência da tabela Dependencies
@@ -114,7 +114,7 @@ public class PackageLuaModifier {
             // Salva as mudanças no arquivo Lua
             saveLuaFile();
         } else {
-            System.out.println("Dependência '" + name + "' não encontrada.");
+            System.out.println("Dependency '" + name + "' not found.");
         }
     }
 
@@ -137,13 +137,13 @@ public class PackageLuaModifier {
         // Recupera o conteúdo atualizado do arquivo Lua
         StringBuilder content = new StringBuilder();
 
-        content.append("-- Config related to your package in cryxie\n\n");
+        content.append("-- Config related to your package\n\n");
 
         content.append("Name = \"").append(name).append("\"\n");
         content.append("Description = \"").append(description).append("\"\n");
         content.append("Version = \"").append(version).append("\"\n");
         content.append("RepositoryUrl = \"").append(repositoryUrl).append("\"\n");
-
+        content.append("\n");
         content.append("Dependencies = {\n");
         for (LuaValue key : dependenciesTable.keys()) {
             content.append("  [\"").append(key.tojstring()).append("\"] = \"")

@@ -6,8 +6,8 @@ import java.io.FileNotFoundException;
 public class CryxieLibsDirectory {
     private String jarName;
 
-    public CryxieLibsDirectory jarFileName(String jarName){
-        this.jarName = jarName;
+    public CryxieLibsDirectory jarFileName(String jarName) {
+        this.jarName = jarName.contains(".jar") ? jarName : jarName.concat(".jar");
         return this;
     }
 
@@ -17,13 +17,12 @@ public class CryxieLibsDirectory {
 
         if (jarFile.exists()) {
             if (jarFile.delete()) {
-                System.out.println("Arquivo " + jarName + " foi excluído com sucesso.");
+                System.out.println("File " + jarName + " was successfully deleted.");
             } else {
-                throw new RuntimeException("Não foi possível excluir o arquivo: " + jarName);
+                throw new RuntimeException("Could not delete file (try again): " + jarName);
             }
         } else {
-            throw new FileNotFoundException("Arquivo " + jarName + " não encontrado em cryxie_libs.");
+            throw new FileNotFoundException("File " + jarName + " not found in cryxie_libs directory.");
         }
     }
-
 }

@@ -2,6 +2,7 @@ package alpine.crixie.cli;
 
 import alpine.crixie.cli.commands.InitCommand;
 import alpine.crixie.cli.commands.InstallCommand;
+import alpine.crixie.cli.commands.UninstallCommand;
 import picocli.CommandLine;
 
 public class Main {
@@ -16,7 +17,8 @@ public class Main {
                 subcommands = {
                         InstallCommand.class,
                         InitCommand.class,
-                        CommandLine.HelpCommand.class
+                        CommandLine.HelpCommand.class,
+                        UninstallCommand.class
                 }
         )
         class CliCommand implements Runnable {

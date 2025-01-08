@@ -7,36 +7,37 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class PackageLuaComponent {
-    public PackageLuaComponent(){
-        _make("","0.0.1", "","", "N");
+    public PackageLuaComponent() {
+        _make("", "0.0.1", "", "", "N");
     }
 
     public PackageLuaComponent(
-            String packageName, String version, String repoUrl,  String description, String generateProject){
-        _make(packageName,version, repoUrl,description,generateProject);
+            String packageName, String version, String repoUrl, String description, String generateProject) {
+        _make(packageName, version, repoUrl, description, generateProject);
     }
 
     public PackageLuaComponent(
-            String packageName, String version, String repoUrl,  String description){
-        _make(packageName,version, repoUrl,description,"N");
+            String packageName, String version, String repoUrl, String description) {
+        _make(packageName, version, repoUrl, description, "N");
     }
 
     private void _make(String packageName,
                        String version, String repoUrl,
-                       String description, String generateProject){
+                       String description, String generateProject) {
 
         generateLuaFile(packageName, version, repoUrl, description);
         generateJavaProject(generateProject);
     }
 
     private void generateJavaProject(String generateProject) {
-            if(canGenerateJavaProject(generateProject)){
-                new GenerateMainClass().generate((directory)->{});
+        if (canGenerateJavaProject(generateProject)) {
+            new GenerateMainClass().generate((directory) -> {
+            });
         }
     }
 
-    private boolean canGenerateJavaProject(String generateProject){
-        return !generateProject.isEmpty() &&  (generateProject.trim().equalsIgnoreCase("y") ||
+    private boolean canGenerateJavaProject(String generateProject) {
+        return !generateProject.isEmpty() && (generateProject.trim().equalsIgnoreCase("y") ||
                 generateProject.trim().equalsIgnoreCase("yes"));
     }
 
@@ -45,9 +46,9 @@ public class PackageLuaComponent {
         File newFile = new File(currentDir, "package.lua");
 
 
-        try( var writer = new FileWriter(newFile)) {
+        try (var writer = new FileWriter(newFile)) {
             writer.write("---\n" +
-                    "--- Config related to your package in cryxie\n" +
+                    "--- Config related to your package\n" +
                     "---\n\n" +
                     "Name = \"" + packageName + "\"\n" +
                     "Description = \"" + description + "\"\n" +

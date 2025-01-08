@@ -44,9 +44,9 @@ class InstallCommandTest {
     void download() throws FileNotFoundException {
         final String name = "machine";
         new FileDownloader(name).download();
-        new PomXmlModifier().
-                name(name)
-                .add();
+
+        new PomXmlModifier(name, "latest").
+                add();
 
         PackageLuaModifier modifier = PackageLuaModifier.getInstance();
         modifier.addDependency(name, "1.0.1");
@@ -61,8 +61,8 @@ class InstallCommandTest {
 
     //@Test
     void removerPacoteDoPomXml() {
-        new PomXmlModifier().
-                name("alpine_central_email_file_manager.jar")
+        new PomXmlModifier("alpine_central_email_file_manager.jar",
+                "latest")
                 .remove();
     }
 
@@ -72,9 +72,8 @@ class InstallCommandTest {
 //                name("alpine_central_email_file_manager.jar")
 //                .add();
 
-        new PomXmlModifier().
-                name("arquivo.jar")
-                .add();
+        new PomXmlModifier("arquivo.jar", "version").
+                add();
     }
 
     //@Test

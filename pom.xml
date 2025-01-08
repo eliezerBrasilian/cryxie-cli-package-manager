@@ -21,11 +21,9 @@
       <version>4.7.6</version>
     </dependency>
     <dependency>
-      <groupId>jdom</groupId>
-      <artifactId>jdom</artifactId>
-      <version>not-provided</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/internal_libs/jdom-2.0.6.1.jar</systemPath>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom2</artifactId>
+      <version>2.0.6</version>
     </dependency>
     <dependency>
       <groupId>mainclass-generator</groupId>
@@ -46,14 +44,6 @@
       <version>RELEASE</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>teste.jar</groupId>
-      <artifactId>teste.jar</artifactId>
-      <version>not-provided</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/cryxie_libs/teste.jar</systemPath>
-    </dependency>
-
   </dependencies>
   <build>
     <plugins>
