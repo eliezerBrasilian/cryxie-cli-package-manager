@@ -1,18 +1,27 @@
 package alpine.crixie.cli.utiities;
 
+import alpine.crixie.cli.utiities.requests.PackageRequest;
+import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
+
+import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.UUID;
 
 public class RestUtils {
 
-    static HttpURLConnection get(String request){
-        try{
-            var connection = (HttpURLConnection) new URL(request).openConnection();
-            connection.setRequestMethod("GET");
-            return connection;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public final static String BASE_URL = "http://localhost:4010/cryxie/api/v1";
+
+    public static int sendPackage(
+            PackageRequestDto packageRequestDto,
+            File readmeFile,
+            File jarFile) throws IOException, InterruptedException {
+
+        String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
+
+        var response = new PackageRequest(BASE_URL, boundary).
+                send(packageRequestDto, readmeFile, jarFile);
+
+        return response.statusCode();
     }
+
 }

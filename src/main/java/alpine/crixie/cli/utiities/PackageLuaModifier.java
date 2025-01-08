@@ -7,17 +7,17 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
-import java.util.Properties;
 
 public class PackageLuaModifier {
     private static PackageLuaModifier instance = null;
 
     private final Globals globals;
     private final LuaTable dependenciesTable;
-    private String name;
-    private String description;
-    private String version;
-    private String repositoryUrl;
+    private final String name;
+    private final String description;
+    private final String version;
+    private final String repositoryUrl;
+    private final String directoryWhereMainFileIs;
 
     public static PackageLuaModifier getInstance() throws FileNotFoundException {
         final String luaFilePath = "package.lua";
@@ -30,13 +30,6 @@ public class PackageLuaModifier {
             instance = new PackageLuaModifier(new FileInputStream(luaFile));
         }
         return instance;
-    }
-
-    public static PackageLuaModifier createInstance(InputStream luaFileStream) {
-        if (luaFileStream == null) {
-            throw new RuntimeException("O InputStream fornecido é nulo.");
-        }
-        return new PackageLuaModifier(luaFileStream);
     }
 
     private PackageLuaModifier(InputStream luaFileStream) throws RuntimeException {
@@ -59,6 +52,14 @@ public class PackageLuaModifier {
                 globals.set("Name", nameT);
             }
             name = nameT.tojstring();
+
+            LuaString directoryWhereMainFileIsT = (LuaString) globals.get("DirectoryWhereMainFileIs");
+            if (directoryWhereMainFileIsT.equals(LuaValue.NIL)) {
+                directoryWhereMainFileIsT = LuaString.valueOf("");
+                globals.set("DirectoryWhereMainFileIs", directoryWhereMainFileIsT);
+            }
+
+            directoryWhereMainFileIs = directoryWhereMainFileIsT.tojstring();
 
             LuaString descT = (LuaString) globals.get("Description");
             if (descT.equals(LuaValue.NIL)) {
@@ -118,14 +119,13 @@ public class PackageLuaModifier {
         }
     }
 
-
     private void saveLuaFile() {
         // Recria o arquivo Lua com as alterações
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(getLuaFilePath()), "UTF-8"))) {
             writer.write(getLuaFileContent());
         } catch (IOException e) {
-            throw new RuntimeException("Erro ao salvar o arquivo Lua", e);
+            throw new RuntimeException("Error saving package.lua file", e);
         }
     }
 
@@ -154,20 +154,16 @@ public class PackageLuaModifier {
         return content.toString();
     }
 
-    public Properties toProperties(String mainTableName) throws IllegalArgumentException {
-        // Tabela principal no arquivo Lua
-        LuaTable mainTable = (LuaTable) globals.get(mainTableName);
-
-        if (mainTable.equals(LuaValue.NIL)) {
-            throw new IllegalArgumentException("Dependencies = {} not founded" + mainTableName);
-        }
-
-        Properties props = new Properties();
-        for (LuaValue key : mainTable.keys()) {
-            props.put(key.tojstring(), mainTable.get(key).tojstring());
-        }
-        return props;
+    public String getName() {
+        return name;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDirectoryWhereMainFileIs() {
+        return directoryWhereMainFileIs;
+    }
 }
 

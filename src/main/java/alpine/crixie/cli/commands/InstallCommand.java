@@ -23,6 +23,7 @@ public class InstallCommand implements Runnable {
 
                     System.out.print("Enter the passcode: ");
                     String passcode = scanner.nextLine();
+                    scanner.close();
 
                     new FileDownloader(name, version).retryDownload(passcode);
                 });

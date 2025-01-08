@@ -43,7 +43,7 @@ class InstallCommandTest {
     //@Test
     void download() throws FileNotFoundException {
         final String name = "machine";
-        new FileDownloader(name).download();
+        new FileDownloader(name).download1(null);
 
         new PomXmlModifier(name, "latest").
                 add();
