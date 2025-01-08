@@ -11,10 +11,8 @@ import reactor.core.publisher.Mono;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -156,23 +154,6 @@ public class FileDownloader {
     void writeFileFromBytes(byte[] fileBytes) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
             outputStream.write(fileBytes);
-        }
-    }
-
-    @Deprecated
-    public void download() {
-        try {
-            var response = RestUtils.
-                    get("http://localhost:4010/cryxie/api/v1/package/download?name=".concat(name).concat("&version=").concat(version));
-
-            if (response.getResponseCode() == 200) {
-                try (InputStream in = response.getInputStream()) {
-                    Files.createDirectories(Paths.get("libs"));
-                    Files.copy(in, Paths.get("cryxie_libs/".concat(name).concat(".jar")), StandardCopyOption.REPLACE_EXISTING);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

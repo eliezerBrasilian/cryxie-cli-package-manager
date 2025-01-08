@@ -14,10 +14,10 @@ public class PackageLuaModifier {
 
     private final Globals globals;
     private final LuaTable dependenciesTable;
-    private String name;
-    private String description;
-    private String version;
-    private String repositoryUrl;
+    private final String name;
+    private final String description;
+    private final String version;
+    private final String repositoryUrl;
 
     public static PackageLuaModifier getInstance() throws FileNotFoundException {
         final String luaFilePath = "package.lua";
@@ -118,14 +118,13 @@ public class PackageLuaModifier {
         }
     }
 
-
     private void saveLuaFile() {
         // Recria o arquivo Lua com as alterações
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(getLuaFilePath()), "UTF-8"))) {
             writer.write(getLuaFileContent());
         } catch (IOException e) {
-            throw new RuntimeException("Erro ao salvar o arquivo Lua", e);
+            throw new RuntimeException("Error saving package.lua file", e);
         }
     }
 
