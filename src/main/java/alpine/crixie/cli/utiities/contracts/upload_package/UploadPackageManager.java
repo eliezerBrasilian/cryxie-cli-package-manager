@@ -3,6 +3,7 @@ package alpine.crixie.cli.utiities.contracts.upload_package;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 public class UploadPackageManager {
     private final UploadPackageContract uploadPackageContract;
@@ -21,6 +22,8 @@ public class UploadPackageManager {
 
             System.out.println("readme file was obtained");
             return uploadPackageContract.sendPackage(packageRequestDto);
+        } catch (ConnectException e) {
+            throw new RuntimeException("can't send package looks live server is busy or off");
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
