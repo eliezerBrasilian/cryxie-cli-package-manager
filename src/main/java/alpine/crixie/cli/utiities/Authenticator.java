@@ -36,21 +36,24 @@ public class Authenticator {
         }
     }
 
-    public void saveToken(HttpResponse<String> response) throws JsonProcessingException {
+    public void saveToken(HttpResponse<String> response
+    ) throws JsonProcessingException {
         switch (response.statusCode()) {
             case 200:
                 System.out.println("logado");
                 String body = response.body();
-                ;
 
-                record AuthResponseDto(String profile_picture, boolean is_membership, String token) {
+                record AuthResponseDto(String profile_picture, boolean is_membership, String token, String name) {
                 }
 
                 var mapped = new JsonMapper<AuthResponseDto>()
-                        .fromJsonToTarget(response.body(), AuthResponseDto.class);
+                        .fromJsonToTarget(body, AuthResponseDto.class);
 
 
                 System.out.println(mapped.token);
+
+                new LocalStorage().updateData(new LocalStorage.Data(mapped.token, mapped.profile_picture, mapped.name));
+                System.out.println("Now you're logged in, try perform your operation again:)");
                 break;
 
             case 500:
