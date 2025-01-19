@@ -25,7 +25,6 @@ public class RestUtils {
         return response.statusCode();
     }
 
-
     public static int sendNewVersion(
             NewVersionRequestDto newVersionRequestDto,
             File jarFile) throws IOException, InterruptedException {
