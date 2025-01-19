@@ -11,6 +11,7 @@ import java.io.*;
 public class PackageLuaModifier {
     private static PackageLuaModifier instance = null;
 
+    private final Globals globals;
     private final LuaTable dependenciesTable;
     private final String name;
     private final String description;
@@ -33,7 +34,7 @@ public class PackageLuaModifier {
 
     private PackageLuaModifier(InputStream luaFileStream) throws RuntimeException {
         try {
-            Globals globals = JsePlatform.standardGlobals();
+            globals = JsePlatform.standardGlobals();
 
             LuaValue chunk = globals.load(luaFileStream, "package.lua", "t", globals);
             chunk.call();
@@ -45,9 +46,9 @@ public class PackageLuaModifier {
             }
             dependenciesTable = dependenciesTableT;
 
-            LuaTable directoryWhereMainFileIsT = (LuaTable) globals.get("DirectoryWhereMainFileIs");
+            LuaString directoryWhereMainFileIsT = (LuaString) globals.get("DirectoryWhereMainFileIs");
             if (directoryWhereMainFileIsT.equals(LuaValue.NIL)) {
-                directoryWhereMainFileIsT = new LuaTable();
+                directoryWhereMainFileIsT = LuaString.valueOf("");
                 globals.set("DirectoryWhereMainFileIs", directoryWhereMainFileIsT);
             }
             directoryWhereMainFileIs = directoryWhereMainFileIsT.tojstring();
@@ -163,6 +164,14 @@ public class PackageLuaModifier {
 
     public String getDirectoryWhereMainFileIs() {
         return directoryWhereMainFileIs;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getRepositoryUrl() {
+        return this.repositoryUrl;
     }
 }
 

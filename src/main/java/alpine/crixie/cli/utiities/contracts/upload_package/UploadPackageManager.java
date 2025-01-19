@@ -13,6 +13,7 @@ public class UploadPackageManager {
 
     public int sendPackage(PackageRequestDto packageRequestDto) {
         try {
+            System.out.println("starting building project");
             uploadPackageContract.generateJar();
 
             System.out.println("jar was generated successfully");

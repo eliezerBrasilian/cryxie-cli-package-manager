@@ -1,8 +1,6 @@
 package alpine.crixie.cli;
 
-import alpine.crixie.cli.commands.InitCommand;
-import alpine.crixie.cli.commands.InstallCommand;
-import alpine.crixie.cli.commands.UninstallCommand;
+import alpine.crixie.cli.commands.*;
 import picocli.CommandLine;
 
 public class Main {
@@ -18,7 +16,9 @@ public class Main {
                         InstallCommand.class,
                         InitCommand.class,
                         CommandLine.HelpCommand.class,
-                        UninstallCommand.class
+                        UninstallCommand.class,
+                        UploadJavaPackageCommand.class,
+                        BuildJavaPackageCommand.class
                 }
         )
         class CliCommand implements Runnable {

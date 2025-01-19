@@ -21,6 +21,6 @@ class PackageRequestDtoTest {
                 List.of(new PackageRequestDto.Dependency("spring-boot-starter", "2.7.0")),
                 PackageRequestDto.Type.JAVA
         );
-        System.out.println(packageRequestDto.getJson());
+        //System.out.println(packageRequestDto.getJson());
     }
 }

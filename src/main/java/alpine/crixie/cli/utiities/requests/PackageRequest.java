@@ -1,5 +1,6 @@
 package alpine.crixie.cli.utiities.requests;
 
+import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.File;
@@ -27,7 +28,7 @@ public class PackageRequest {
                                      File readmeFile, File jarFile) throws IOException, InterruptedException {
         String url = baseUrl + "/package";
 
-        String packageJson = packageRequestDto.getJson();
+        String packageJson = new JsonMapper(packageRequestDto).toJson();
 
         String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoIiwic3ViIjoidXN1YXJpb0B0ZXN0ZS5jb20iLCJleHAiOjE3MzU3NjQ3Mjd9._4DUkeelrlISjeapTsA5YBCU5RO-hpRVeEYwHLmoirQ";
 

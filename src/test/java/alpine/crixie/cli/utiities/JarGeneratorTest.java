@@ -13,8 +13,14 @@ class JarGeneratorTest {
     private File jarFile;
 
     @Test
+    void luaFile() {
+        final String luaFilePath = new File("package.lua").getAbsolutePath();
+        System.out.println(luaFilePath);
+    }
+
+    @Test
     public void generateJar() throws IOException {
-        int x = 2;
+      
         String name = PackageLuaModifier.getInstance().getName();
         String version = PackageLuaModifier.getInstance().getVersion();
         String directoryWhereMainFileIs = PackageLuaModifier.getInstance().getDirectoryWhereMainFileIs();
