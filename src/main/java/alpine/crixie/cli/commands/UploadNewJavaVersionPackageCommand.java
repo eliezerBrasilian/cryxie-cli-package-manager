@@ -1,5 +1,7 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.Authenticator;
+import alpine.crixie.cli.utiities.LocalStorage;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageManager;
@@ -23,15 +25,22 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
 
             var manager = new UploadPackageManager(new UploadPackageImpl());
 
-            int statusCode = manager.sendNewVersion(packageRequestDto);
-            if (statusCode == 200) {
-                System.out.println("new version was added");
+            String authorizationToken = new LocalStorage().getData().token();
+
+            if (authorizationToken.isEmpty()) {
+                new Authenticator()
+                        .login();
+            } else {
+                int statusCode = manager.sendNewVersion(packageRequestDto);
+                if (statusCode == 200) {
+                    System.out.println("new version was added");
+                }
+                if (statusCode == 500) {
+                    System.out.println("Already exists a version with this identifier: 0.0.1");
+                    System.out.println("Did you try change the version in package.lua file?");
+                }
             }
-            if (statusCode == 500) {
-                System.out.println("Already exists a version with this identifier: 0.0.1");
-                System.out.println("Did you try change the version in package.lua file?");
-            }
-            System.out.println(statusCode);
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

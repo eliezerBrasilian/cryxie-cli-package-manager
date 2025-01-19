@@ -10,12 +10,25 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Authenticator {
-    //logar usuario > obter o token e salvar
-
-    public void login(String email, String pass) {
+    public void login() {
         try {
+            Scanner input = new Scanner(System.in);
+
+            System.out.print("Please enter your email: ");
+            String email = input.nextLine().trim();
+
+            System.out.print("Please enter your password: ");
+            String pass = input.nextLine().trim();
+
+            if (email.isEmpty() || pass.isEmpty()) {
+                System.out.println("You have to enter your email and password created at cryxie.com :(");
+                return;
+            }
+            System.out.println("please wait...");
+
             String body = new JsonMapper<>()
                     .fromFields(Map.entry("email", email),
                             Map.entry("password", pass))
@@ -40,7 +53,6 @@ public class Authenticator {
     ) throws JsonProcessingException {
         switch (response.statusCode()) {
             case 200:
-                System.out.println("logado");
                 String body = response.body();
 
                 record AuthResponseDto(String profile_picture, boolean is_membership, String token, String name) {
@@ -49,13 +61,9 @@ public class Authenticator {
                 var mapped = new JsonMapper<AuthResponseDto>()
                         .fromJsonToTarget(body, AuthResponseDto.class);
 
-
-                System.out.println(mapped.token);
-
                 new LocalStorage().updateData(new LocalStorage.Data(mapped.token, mapped.profile_picture, mapped.name));
                 System.out.println("Now you're logged in, try perform your operation again:)");
                 break;
-
             case 500:
                 System.out.println("invalid credentials");
                 break;

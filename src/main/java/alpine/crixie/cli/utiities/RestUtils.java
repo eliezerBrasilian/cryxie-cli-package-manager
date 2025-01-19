@@ -6,7 +6,6 @@ import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 public class RestUtils {
 
@@ -17,9 +16,7 @@ public class RestUtils {
             File readmeFile,
             File jarFile) throws IOException, InterruptedException {
 
-        String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
-
-        var response = new PackageRequest(BASE_URL, boundary).
+        var response = new PackageRequest().
                 send(packageRequestDto, readmeFile, jarFile);
 
         return response.statusCode();
@@ -29,9 +26,7 @@ public class RestUtils {
             NewVersionRequestDto newVersionRequestDto,
             File jarFile) throws IOException, InterruptedException {
 
-        String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
-
-        var response = new PackageRequest(BASE_URL, boundary).
+        var response = new PackageRequest().
                 sendNewVersion(newVersionRequestDto, jarFile);
 
         return response.statusCode();
