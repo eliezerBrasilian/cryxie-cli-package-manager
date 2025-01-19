@@ -51,6 +51,7 @@ public class PackageLuaComponent {
                     "--- Config related to your package\n" +
                     "---\n\n" +
                     "Name = \"" + packageName + "\"\n" +
+                    "DirectoryWhereMainFileIs = \"" + " " + "\"\n" +
                     "Description = \"" + description + "\"\n" +
                     "Version = \"" + version + "\"\n\n" +
                     "RepositoryUrl = \"" + repoUrl + "\"\n\n" +

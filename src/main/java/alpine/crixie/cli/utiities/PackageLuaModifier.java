@@ -7,17 +7,16 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
-import java.util.Properties;
 
 public class PackageLuaModifier {
     private static PackageLuaModifier instance = null;
 
-    private final Globals globals;
     private final LuaTable dependenciesTable;
-    private String name;
-    private String description;
-    private String version;
-    private String repositoryUrl;
+    private final String name;
+    private final String description;
+    private final String version;
+    private final String repositoryUrl;
+    private final String directoryWhereMainFileIs;
 
     public static PackageLuaModifier getInstance() throws FileNotFoundException {
         final String luaFilePath = "package.lua";
@@ -32,26 +31,26 @@ public class PackageLuaModifier {
         return instance;
     }
 
-    public static PackageLuaModifier createInstance(InputStream luaFileStream) {
-        if (luaFileStream == null) {
-            throw new RuntimeException("O InputStream fornecido é nulo.");
-        }
-        return new PackageLuaModifier(luaFileStream);
-    }
-
     private PackageLuaModifier(InputStream luaFileStream) throws RuntimeException {
         try {
-            globals = JsePlatform.standardGlobals();
+            Globals globals = JsePlatform.standardGlobals();
 
             LuaValue chunk = globals.load(luaFileStream, "package.lua", "t", globals);
             chunk.call();
 
-            LuaTable mainTable = (LuaTable) globals.get("Dependencies");
-            if (mainTable.equals(LuaValue.NIL)) {
-                mainTable = new LuaTable();  // Cria uma nova tabela se não existir
-                globals.set("Dependencies", mainTable);
+            LuaTable dependenciesTableT = (LuaTable) globals.get("Dependencies");
+            if (dependenciesTableT.equals(LuaValue.NIL)) {
+                dependenciesTableT = new LuaTable();  // Cria uma nova tabela se não existir
+                globals.set("Dependencies", dependenciesTableT);
             }
-            dependenciesTable = mainTable;
+            dependenciesTable = dependenciesTableT;
+
+            LuaTable directoryWhereMainFileIsT = (LuaTable) globals.get("DirectoryWhereMainFileIs");
+            if (directoryWhereMainFileIsT.equals(LuaValue.NIL)) {
+                directoryWhereMainFileIsT = new LuaTable();
+                globals.set("DirectoryWhereMainFileIs", directoryWhereMainFileIsT);
+            }
+            directoryWhereMainFileIs = directoryWhereMainFileIsT.tojstring();
 
             LuaString nameT = (LuaString) globals.get("Name");
             if (nameT.equals(LuaValue.NIL)) {
@@ -118,7 +117,6 @@ public class PackageLuaModifier {
         }
     }
 
-
     private void saveLuaFile() {
         // Recria o arquivo Lua com as alterações
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
@@ -140,6 +138,7 @@ public class PackageLuaModifier {
         content.append("-- Config related to your package\n\n");
 
         content.append("Name = \"").append(name).append("\"\n");
+        content.append("DirectoryWhereMainFileIs = \"").append(directoryWhereMainFileIs).append("\"\n");
         content.append("Description = \"").append(description).append("\"\n");
         content.append("Version = \"").append(version).append("\"\n");
         content.append("RepositoryUrl = \"").append(repositoryUrl).append("\"\n");
@@ -154,20 +153,16 @@ public class PackageLuaModifier {
         return content.toString();
     }
 
-    public Properties toProperties(String mainTableName) throws IllegalArgumentException {
-        // Tabela principal no arquivo Lua
-        LuaTable mainTable = (LuaTable) globals.get(mainTableName);
-
-        if (mainTable.equals(LuaValue.NIL)) {
-            throw new IllegalArgumentException("Dependencies = {} not founded" + mainTableName);
-        }
-
-        Properties props = new Properties();
-        for (LuaValue key : mainTable.keys()) {
-            props.put(key.tojstring(), mainTable.get(key).tojstring());
-        }
-        return props;
+    public String getName() {
+        return name;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDirectoryWhereMainFileIs() {
+        return directoryWhereMainFileIs;
+    }
 }
 
