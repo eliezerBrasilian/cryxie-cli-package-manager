@@ -1,6 +1,7 @@
 package alpine.crixie.cli.utiities;
 
 import alpine.crixie.cli.utiities.requests.PackageRequest;
+import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.File;
@@ -20,6 +21,19 @@ public class RestUtils {
 
         var response = new PackageRequest(BASE_URL, boundary).
                 send(packageRequestDto, readmeFile, jarFile);
+
+        return response.statusCode();
+    }
+
+
+    public static int sendNewVersion(
+            NewVersionRequestDto newVersionRequestDto,
+            File jarFile) throws IOException, InterruptedException {
+
+        String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
+
+        var response = new PackageRequest(BASE_URL, boundary).
+                sendNewVersion(newVersionRequestDto, jarFile);
 
         return response.statusCode();
     }
