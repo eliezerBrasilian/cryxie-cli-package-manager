@@ -27,7 +27,7 @@ public class PackageRequest {
         String packageJson = new JsonMapper<>(packageRequestDto).toJson();
 
         String bearerToken = new LocalStorage().getData().token();
-
+        //String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoIiwic3ViIjoiYWxwaW5pc3RhbWVzdHJlQHlhaG9vLmNvbSIsImV4cCI6MTczNzQxNjA5OH0.Pe_SLTl2z9xVbUpDQQfZgaR7hWeoh-91sEkYW5i944g";
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(RestUtils.BASE_URL + "/package"))

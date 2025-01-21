@@ -46,7 +46,7 @@ public class JsonMapper<T> {
         ObjectMapper objectMapper = new ObjectMapper();
         //não lança excessão se vier campos a mais que eu não existe no meu dto
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper.readValue(json, klass);
+        return (T) objectMapper.readValue(json, klass);
 
     }
 }
