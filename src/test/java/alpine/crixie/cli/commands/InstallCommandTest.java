@@ -48,7 +48,7 @@ class InstallCommandTest {
         new PomXmlModifier(name, "latest").
                 add();
 
-        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+        PackageLuaModifier modifier = new PackageLuaModifier();
         modifier.addDependency(name, "1.0.1");
     }
 
@@ -78,14 +78,14 @@ class InstallCommandTest {
 
     //@Test
     void adicionaDependenciaAoPackageLua() throws FileNotFoundException {
-        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+        PackageLuaModifier modifier = new PackageLuaModifier();
 
         modifier.addDependency("picaru", "1.0.1");
     }
 
     //@Test
     void removeDependenciaDoPackageLua() throws FileNotFoundException {
-        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+        PackageLuaModifier modifier = new PackageLuaModifier();
 
         // Adicionando dependência
         modifier.removeDependency("cebola");

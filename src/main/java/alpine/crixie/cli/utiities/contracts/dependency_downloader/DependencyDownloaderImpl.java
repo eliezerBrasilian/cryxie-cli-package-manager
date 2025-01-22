@@ -43,7 +43,7 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
     @Override
     public void addToPackageLuaFile() {
         try {
-            PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+            PackageLuaModifier modifier = new PackageLuaModifier();
             modifier.addDependency(packageName, version);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("was not possible to add dependency into package.lua");
@@ -59,7 +59,7 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
 
     @Override
     public void removePackageFromLuaFile() throws FileNotFoundException {
-        PackageLuaModifier modifier = PackageLuaModifier.getInstance();
+        PackageLuaModifier modifier = new PackageLuaModifier();
 
         modifier.removeDependency(packageName);
     }

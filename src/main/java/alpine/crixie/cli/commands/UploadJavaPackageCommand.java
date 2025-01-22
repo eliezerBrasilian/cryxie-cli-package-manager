@@ -46,17 +46,17 @@ public class UploadJavaPackageCommand implements Runnable {
     }
 
     private static PackageRequestDto getPackageRequestDto() throws FileNotFoundException {
-        PackageLuaModifier packageLuaModifier = PackageLuaModifier.getInstance();
+        var data = new PackageLuaModifier().getData();
 
         return new PackageRequestDto(
-                packageLuaModifier.getName(),
-                packageLuaModifier.getDirectoryWhereMainFileIs(),
-                packageLuaModifier.getDescription(),
+                data.name(),
+                data.directoryWhereMainFileIs(),
+                data.description(),
                 true,
                 "12345",
-                packageLuaModifier.getRepositoryUrl(),
+                data.repositoryUrl(),
                 new ArrayList<>(),
-                packageLuaModifier.getVersion(),
+                data.version(),
                 new ArrayList<>(),
                 PackageRequestDto.Type.JAVA
         );

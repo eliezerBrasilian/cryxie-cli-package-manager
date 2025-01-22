@@ -47,11 +47,12 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
     }
 
     private static NewVersionRequestDto getNewVersionRequestDto() throws FileNotFoundException {
-        PackageLuaModifier packageLuaModifier = PackageLuaModifier.getInstance();
+        PackageLuaModifier packageLuaModifier = new PackageLuaModifier();
 
+        var data = packageLuaModifier.getData();
         return new NewVersionRequestDto(
-                packageLuaModifier.getName(),
-                packageLuaModifier.getVersion(),
+                data.name(),
+                data.version(),
                 List.of(),
                 "12345",
                 PackageRequestDto.Type.JAVA

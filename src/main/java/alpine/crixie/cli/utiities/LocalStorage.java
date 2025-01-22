@@ -70,7 +70,7 @@ public class LocalStorage {
         this.token = data.token;
         this.name = data.name;
         this.profilePicture = data.profilePicture;
-        
+
         globals.set("Token", LuaString.valueOf(token));
 
         saveChangesAtLuaFile();

@@ -1,5 +1,6 @@
 package alpine.crixie.cli.utiities;
 
+import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
@@ -7,36 +8,35 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PackageLuaModifier {
-    private static PackageLuaModifier instance = null;
+    private Globals globals;
+    private LuaTable dependenciesTable;
+    private String name;
+    private String description;
+    private String version;
+    private String repositoryUrl;
+    private String directoryWhereMainFileIs;
+    private List<PackageRequestDto.Dependency> deps = new ArrayList<>();
+    private static final String LUA_FILE_PATH = "package.lua";
 
-    private final Globals globals;
-    private final LuaTable dependenciesTable;
-    private final String name;
-    private final String description;
-    private final String version;
-    private final String repositoryUrl;
-    private final String directoryWhereMainFileIs;
-
-    public static PackageLuaModifier getInstance() throws FileNotFoundException {
-        final String luaFilePath = "package.lua";
-
-        if (instance == null) {
-            File luaFile = new File(luaFilePath);
-            if (!luaFile.exists()) {
-                throw new RuntimeException("file package.lua not found at " + luaFilePath);
-            }
-            instance = new PackageLuaModifier(new FileInputStream(luaFile));
+    public PackageLuaModifier() throws FileNotFoundException {
+        File luaFile = new File(LUA_FILE_PATH);
+        if (!luaFile.exists()) {
+            throw new FileNotFoundException("file package.lua not found at " + LUA_FILE_PATH);
         }
-        return instance;
+        load();
     }
 
-    private PackageLuaModifier(InputStream luaFileStream) throws RuntimeException {
+    public void load() {
         try {
             globals = JsePlatform.standardGlobals();
 
-            LuaValue chunk = globals.load(luaFileStream, "package.lua", "t", globals);
+            LuaValue chunk = globals.load(new FileInputStream(LUA_FILE_PATH),
+                    LUA_FILE_PATH, "t", globals);
+
             chunk.call();
 
             LuaTable dependenciesTableT = (LuaTable) globals.get("Dependencies");
@@ -46,45 +46,31 @@ public class PackageLuaModifier {
             }
             dependenciesTable = dependenciesTableT;
 
-            LuaString directoryWhereMainFileIsT = (LuaString) globals.get("DirectoryWhereMainFileIs");
-            if (directoryWhereMainFileIsT.equals(LuaValue.NIL)) {
-                directoryWhereMainFileIsT = LuaString.valueOf("");
-                globals.set("DirectoryWhereMainFileIs", directoryWhereMainFileIsT);
-            }
-            directoryWhereMainFileIs = directoryWhereMainFileIsT.tojstring();
+            for (LuaValue dep_key : dependenciesTable.keys()) {
+                var key = dep_key.tojstring();
+                var value = dependenciesTable.get(key).tojstring();
 
-            LuaString nameT = (LuaString) globals.get("Name");
-            if (nameT.equals(LuaValue.NIL)) {
-                nameT = LuaString.valueOf("");
-                globals.set("Name", nameT);
+                deps.add(new PackageRequestDto.Dependency(key, value));
             }
-            name = nameT.tojstring();
 
-            LuaString descT = (LuaString) globals.get("Description");
-            if (descT.equals(LuaValue.NIL)) {
-                descT = LuaString.valueOf("");
-                globals.set("Description", descT);
-            }
-            description = descT.tojstring();
-
-            LuaString versionT = (LuaString) globals.get("Version");
-            if (versionT.equals(LuaValue.NIL)) {
-                versionT = LuaString.valueOf("");
-                globals.set("Version", versionT);
-            }
-            version = versionT.tojstring();
-
-            LuaString repoT = (LuaString) globals.get("RepositoryUrl");
-            if (repoT.equals(LuaValue.NIL)) {
-                repoT = LuaString.valueOf("");
-                globals.set("RepositoryUrl", repoT);
-            }
-            repositoryUrl = repoT.tojstring();
-
+            directoryWhereMainFileIs = getLuaString("DirectoryWhereMainFileIs");
+            name = getLuaString("Name");
+            description = getLuaString("Description");
+            version = getLuaString("Version");
+            repositoryUrl = getLuaString("RepositoryUrl");
 
         } catch (Exception e) {
             throw new RuntimeException("Error loading Lua file", e);
         }
+    }
+
+    private String getLuaString(String variable) {
+        LuaString luaString = (LuaString) globals.get(variable);
+        if (luaString.equals(LuaValue.NIL)) {
+            luaString = LuaString.valueOf("");
+            globals.set(variable, luaString);
+        }
+        return luaString.tojstring();
     }
 
     public void addDependency(String name, String version) {
@@ -129,7 +115,7 @@ public class PackageLuaModifier {
     }
 
     private String getLuaFilePath() {
-        return new File("package.lua").getPath();
+        return new File(LUA_FILE_PATH).getPath();
     }
 
     private String getLuaFileContent() {
@@ -154,24 +140,14 @@ public class PackageLuaModifier {
         return content.toString();
     }
 
-    public String getName() {
-        return name;
+    public record PackageData(
+            String name, String version, String directoryWhereMainFileIs, String description, String repositoryUrl,
+            List<PackageRequestDto.Dependency> deps) {
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public String getDirectoryWhereMainFileIs() {
-        return directoryWhereMainFileIs;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public String getRepositoryUrl() {
-        return this.repositoryUrl;
+    public PackageData getData() {
+        return new PackageData(this.name, this.version, this.directoryWhereMainFileIs, this.description,
+                this.repositoryUrl, deps);
     }
 }
 

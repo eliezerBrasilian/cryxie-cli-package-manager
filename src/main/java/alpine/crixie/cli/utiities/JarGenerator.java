@@ -11,9 +11,10 @@ public class JarGenerator {
     private File jarFile;
 
     public void generateJar() throws IOException {
-        String name = PackageLuaModifier.getInstance().getName();
-        String version = PackageLuaModifier.getInstance().getVersion();
-        String directoryWhereMainFileIs = PackageLuaModifier.getInstance().getDirectoryWhereMainFileIs();
+        var data = new PackageLuaModifier().getData();
+        String name = data.name();
+        String version = data.version();
+        String directoryWhereMainFileIs = data.directoryWhereMainFileIs();
         String jarName = name + "@" + version + ".jar";
 
         // Caminho para salvar o arquivo .jar

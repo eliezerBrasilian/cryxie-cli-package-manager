@@ -13,22 +13,23 @@ import java.util.List;
 public class UploadJavaPackageCommandTest {
     @Test
     void uploadPackage() {
-        
+
     }
 
     @Test
     void getJson() throws FileNotFoundException, JsonProcessingException {
-        PackageLuaModifier packageLuaModifier = PackageLuaModifier.getInstance();
+        PackageLuaModifier packageLuaModifier = new PackageLuaModifier();
 
+        var data = packageLuaModifier.getData();
         var pack = new PackageRequestDto(
-                packageLuaModifier.getName(),
-                packageLuaModifier.getDirectoryWhereMainFileIs(),
-                packageLuaModifier.getDescription(),
-                true,
+                data.name(),
+                data.directoryWhereMainFileIs(),
+                data.description(),
+                false,
                 "12345",
-                packageLuaModifier.getRepositoryUrl(),
+                data.repositoryUrl(),
                 List.of(),
-                packageLuaModifier.getVersion(),
+                data.version(),
                 new ArrayList<>(),
                 PackageRequestDto.Type.JAVA
         );

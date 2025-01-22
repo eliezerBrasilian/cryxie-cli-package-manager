@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
 import static alpine.crixie.cli.utiities.RestUtils.BASE_URL;
 
 public class PackageDownloader {
-    private String name;
+    private final String name;
     private String version = "latest";
     private String outputFilePath;
 
