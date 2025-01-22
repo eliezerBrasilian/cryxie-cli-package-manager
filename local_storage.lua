@@ -1,4 +1,4 @@
-Token =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoIiwic3ViIjoiYWxwaW5pc3RhbWVzdHJlQHlhaG9vLmNvbSIsImV4cCI6MTczNzQxNjA5OH0.Pe_SLTl2z9xVbUpDQQfZgaR7hWeoh-91sEkYW5i944g"
-Name = "Alpinista"
-ProfilePicture = ""
+Token = nil
+Name = nil
+ProfilePicture = nil
+UserId = nil

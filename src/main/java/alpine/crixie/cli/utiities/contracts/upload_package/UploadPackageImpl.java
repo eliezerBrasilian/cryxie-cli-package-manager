@@ -1,7 +1,7 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
 import alpine.crixie.cli.utiities.JarGenerator;
-import alpine.crixie.cli.utiities.RestUtils;
+import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.File;
@@ -27,12 +27,12 @@ public class UploadPackageImpl implements UploadPackageContract {
     @Override
     public int sendPackage(PackageRequestDto packageRequestDto) throws IOException, InterruptedException {
         if (!readmeFile.exists()) {
-            throw new FileNotFoundException("O arquivo README.md não foi encontrado no diretório raiz.");
+            throw new FileNotFoundException("The README.md file was not found in the root directory.");
         }
         if (!jarFile.exists()) {
-            throw new FileNotFoundException("O arquivo mainclass-generator.jar não foi encontrado na pasta builds.");
+            throw new FileNotFoundException("The file with .jar extension was not found in the builds folder.");
         }
 
-        return RestUtils.sendPackage(packageRequestDto, readmeFile, jarFile);
+        return new PackageRequest().send(packageRequestDto, readmeFile, jarFile).statusCode();
     }
 }

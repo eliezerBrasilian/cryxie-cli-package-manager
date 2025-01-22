@@ -57,7 +57,7 @@ public class UploadJavaPackageCommand implements Runnable {
                 data.repositoryUrl(),
                 new ArrayList<>(),
                 data.version(),
-                new ArrayList<>(),
+                data.deps(),
                 PackageRequestDto.Type.JAVA
         );
     }

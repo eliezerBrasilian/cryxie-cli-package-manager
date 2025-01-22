@@ -13,6 +13,7 @@ public class LocalStorage {
     private String token;
     private String name;
     private String profilePicture;
+    private String userId;
 
     private final String FILE_NAME = "local_storage.lua";
 
@@ -24,9 +25,10 @@ public class LocalStorage {
 
             try (var writer = new FileWriter(newFile)) {
                 writer.write(
-                        "Token = \"" + LuaValue.NIL + "\"\n" +
-                                "Name = \"" + LuaValue.NIL + "\"\n" +
-                                "ProfilePicture = \"" + LuaValue.NIL + "\"\n"
+                        "Token = " + LuaValue.NIL + "\n" +
+                                "Name = " + LuaValue.NIL + "\n" +
+                                "ProfilePicture = " + LuaValue.NIL + "\n" +
+                                "UserId = " + LuaValue.NIL + "\n"
                 );
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -36,7 +38,7 @@ public class LocalStorage {
         }
     }
 
-    public void load() throws RuntimeException {
+    private void load() throws RuntimeException {
         try {
             globals = JsePlatform.standardGlobals();
 
@@ -47,6 +49,7 @@ public class LocalStorage {
             name = getLuaString("Name");
             profilePicture = getLuaString("ProfilePicture");
             token = getLuaString("Token");
+            userId = getLuaString("UserId");
 
         } catch (Exception e) {
             throw new RuntimeException("Error loading localStorage", e);
@@ -92,14 +95,15 @@ public class LocalStorage {
     private String content() {
         return "Token = \"" + token + "\"\n" +
                 "Name = \"" + name + "\"\n" +
-                "ProfilePicture = \"" + profilePicture + "\"\n";
+                "ProfilePicture = \"" + profilePicture + "\"\n" +
+                "UserId = \"" + userId + "\"\n";
     }
 
-    public record Data(String token, String profilePicture, String name) {
+    public record Data(String token, String profilePicture, String name, String userId) {
     }
 
     public Data getData() {
-        return new Data(token, profilePicture, name);
+        return new Data(token, profilePicture, name, userId);
     }
 }
 

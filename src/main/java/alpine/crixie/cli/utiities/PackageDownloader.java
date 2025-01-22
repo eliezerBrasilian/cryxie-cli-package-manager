@@ -62,7 +62,7 @@ public class PackageDownloader {
         // Evitar redundância
         String packageKey = packageName + "@" + version;
         if (downloadedPackages.contains(packageKey)) {
-            System.out.println("Pacote já baixado: " + packageKey);
+            System.out.println("Package already downloaded: " + packageKey);
             return;
         }
 
@@ -78,7 +78,7 @@ public class PackageDownloader {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
-            throw new RuntimeException("Erro ao obter o pacote " + packageName + ": " + response.body());
+            throw new RuntimeException("Error on downloading package " + packageName + ": " + response.body());
         }
 
         record BytesAndDeps(@JsonProperty("jarBytes") String jarBytesEncoded, List<PackageRequestDto.Dependency> deps) {
@@ -123,7 +123,7 @@ public class PackageDownloader {
         try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
             outputStream.write(fileBytes);
         } catch (IOException e) {
-            System.out.println("erro ao baixar: " + e);
+            System.out.println("error on downloading: " + e);
         }
     }
 

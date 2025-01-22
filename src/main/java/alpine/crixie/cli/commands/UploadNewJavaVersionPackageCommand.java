@@ -10,7 +10,6 @@ import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import picocli.CommandLine;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 
 @CommandLine.Command(
         name = "upload-new-version",
@@ -53,7 +52,7 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
         return new NewVersionRequestDto(
                 data.name(),
                 data.version(),
-                List.of(),
+                data.deps(),
                 "12345",
                 PackageRequestDto.Type.JAVA
         );
