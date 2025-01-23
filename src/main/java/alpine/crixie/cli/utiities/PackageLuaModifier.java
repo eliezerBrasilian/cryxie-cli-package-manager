@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class PackageLuaModifier {
     private Globals globals;
     private LuaTable dependenciesTable;
@@ -24,6 +25,7 @@ public class PackageLuaModifier {
 
     public PackageLuaModifier() throws FileNotFoundException {
         File luaFile = new File(LUA_FILE_PATH);
+        System.out.println("Absolute path: " + luaFile.getAbsolutePath());
         if (!luaFile.exists()) {
             throw new FileNotFoundException("file package.lua not found at " + LUA_FILE_PATH);
         }

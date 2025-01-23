@@ -119,7 +119,7 @@ public class PackageDownloader {
         }
     }
 
-    void writeFileFromBytes(byte[] fileBytes) throws IOException {
+    void writeFileFromBytes(byte[] fileBytes) {
         try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
             outputStream.write(fileBytes);
         } catch (IOException e) {
@@ -164,20 +164,6 @@ public class PackageDownloader {
                 .exchangeStrategies(exchangeStrategies)
                 .baseUrl("http://localhost:4010")
                 .build();
-    }
-
-    public void download1(PasswordCallback callback) {
-        // Aumentar o limite de buffer para 10 MB
-        WebClient client = getWebFluxClient();
-
-        var body = new PasscodeRequest("latest");
-
-        client.post()
-                .uri("/cryxie/api/v1/package/download?name=".concat(name).concat("&version=").concat(version))
-                .header("Content-Type", "application/json")
-                .bodyValue(body)
-                .exchangeToMono(response -> handleResponse(response, callback))
-                .block();
     }
 
     @FunctionalInterface

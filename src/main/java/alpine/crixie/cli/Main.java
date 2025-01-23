@@ -13,13 +13,14 @@ public class Main {
                 mixinStandardHelpOptions = true,
                 version = "1.0.0",
                 subcommands = {
-                        InstallCommand.class,
+                        InstallPackageCommand.class,
                         InitCommand.class,
                         CommandLine.HelpCommand.class,
                         UninstallCommand.class,
                         UploadJavaPackageCommand.class,
                         BuildJavaPackageCommand.class,
-                        UploadNewJavaVersionPackageCommand.class
+                        UploadNewJavaVersionPackageCommand.class,
+                        InstallAllPackagesCommand.class
                 }
         )
         class CliCommand implements Runnable {

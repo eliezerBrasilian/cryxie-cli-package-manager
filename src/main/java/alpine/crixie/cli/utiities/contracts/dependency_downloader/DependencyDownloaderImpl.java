@@ -1,8 +1,8 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
 import alpine.crixie.cli.utiities.CryxieLibsDirectory;
-import alpine.crixie.cli.utiities.FileDownloader;
 import alpine.crixie.cli.utiities.FileDownloader.PasswordCallback;
+import alpine.crixie.cli.utiities.PackageDownloader;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.PomXmlModifier;
 
@@ -13,6 +13,11 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
 
     String packageName;
     String version = "latest";
+
+    public DependencyDownloaderImpl(String packageName, String version) {
+        this.packageName = packageName;
+        this.version = version;
+    }
 
     public DependencyDownloaderImpl(String pesquisa) {
         this.pesquisa = pesquisa;
@@ -30,8 +35,8 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
 
     @Override
     public void download(PasswordCallback callback) {
-        new FileDownloader(packageName, version)
-                .download1(callback);
+        new PackageDownloader(packageName, version)
+                .downloadPackage();
     }
 
     @Override
@@ -47,7 +52,6 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
             modifier.addDependency(packageName, version);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("was not possible to add dependency into package.lua");
-
         }
     }
 

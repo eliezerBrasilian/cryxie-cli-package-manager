@@ -1,10 +1,10 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.Authenticator;
 import alpine.crixie.cli.utiities.LocalStorage;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageManager;
+import alpine.crixie.cli.utiities.requests.Authenticator;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import picocli.CommandLine;
 
@@ -47,13 +47,14 @@ public class UploadJavaPackageCommand implements Runnable {
 
     private static PackageRequestDto getPackageRequestDto() throws FileNotFoundException {
         var data = new PackageLuaModifier().getData();
-
+        String userId = new LocalStorage().getData().userId();
+        
         return new PackageRequestDto(
                 data.name(),
                 data.directoryWhereMainFileIs(),
                 data.description(),
                 true,
-                "12345",
+                userId,
                 data.repositoryUrl(),
                 new ArrayList<>(),
                 data.version(),

@@ -10,7 +10,7 @@ import java.util.Scanner;
         name = "install",
         description = "Install a specified package."
 )
-public class InstallCommand implements Runnable {
+public class InstallPackageCommand implements Runnable {
 
     @CommandLine.Parameters(paramLabel = "<packageName@version>", description = "Name and optional version of the package to be installed. Format: pacote[@version].")
     private String packageName;

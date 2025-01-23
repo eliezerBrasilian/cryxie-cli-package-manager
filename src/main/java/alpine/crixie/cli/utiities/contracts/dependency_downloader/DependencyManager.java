@@ -20,6 +20,10 @@ public class DependencyManager {
         this.dependencyDownloader = new DependencyDownloaderImpl(pesquisa);
     }
 
+    public DependencyManager(DependencyDownloader dependencyDownloader) {
+        this.dependencyDownloader = dependencyDownloader;
+    }
+
     /**
      * Installs the specified dependency by performing the following steps:
      * - Downloads the dependency.

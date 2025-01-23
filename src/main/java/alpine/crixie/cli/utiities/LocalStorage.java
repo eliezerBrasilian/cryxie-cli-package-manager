@@ -25,10 +25,12 @@ public class LocalStorage {
 
             try (var writer = new FileWriter(newFile)) {
                 writer.write(
-                        "Token = " + LuaValue.NIL + "\n" +
-                                "Name = " + LuaValue.NIL + "\n" +
-                                "ProfilePicture = " + LuaValue.NIL + "\n" +
-                                "UserId = " + LuaValue.NIL + "\n"
+                        """
+                                Token = ""
+                                Name = ""
+                                ProfilePicture = ""
+                                UserId = ""
+                                """
                 );
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -73,6 +75,7 @@ public class LocalStorage {
         this.token = data.token;
         this.name = data.name;
         this.profilePicture = data.profilePicture;
+        this.userId = data.userId;
 
         globals.set("Token", LuaString.valueOf(token));
 
@@ -103,7 +106,8 @@ public class LocalStorage {
     }
 
     public Data getData() {
-        return new Data(token, profilePicture, name, userId);
+        var decoder = new Base64Decoder();
+        return new Data(token, decoder.decode(profilePicture), decoder.decode(name), decoder.decode(userId));
     }
 }
 

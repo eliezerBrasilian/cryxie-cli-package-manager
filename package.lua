@@ -7,5 +7,5 @@ Version = "0.0.2"
 RepositoryUrl = ""
 
 Dependencies = {
-    ["pdf-example"] = "1.0.2",
+    ["pacote2"] = "1.0.0",
 }

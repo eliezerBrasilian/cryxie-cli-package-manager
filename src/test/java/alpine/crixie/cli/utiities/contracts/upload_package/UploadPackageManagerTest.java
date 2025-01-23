@@ -3,6 +3,7 @@ package alpine.crixie.cli.utiities.contracts.upload_package;
 import alpine.crixie.cli.mocks.Mocks;
 import alpine.crixie.cli.utiities.PackageDownloader;
 import alpine.crixie.cli.utiities.RestUtils;
+import alpine.crixie.cli.utiities.requests.PackageRequest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -22,7 +23,7 @@ class UploadPackageManagerTest {
         var readmeFile = new File(System.getProperty("user.dir") + "/README.md");
         var jarFile = new File(System.getProperty("user.dir") + "/projeto2.jar");
 
-        RestUtils.sendPackage(Mocks.package2(), readmeFile, jarFile);
+        new PackageRequest().send(Mocks.package2(), readmeFile, jarFile);
     }
 
     //enviando pacote 1 sem dependencias
@@ -31,6 +32,7 @@ class UploadPackageManagerTest {
         var readmeFile = new File(System.getProperty("user.dir") + "/README.md");
         var jarFile = new File(System.getProperty("user.dir") + "/projeto1.jar");
 
-        RestUtils.sendPackage(Mocks.package1(), readmeFile, jarFile);
+        new PackageRequest().
+                send(Mocks.package1(), readmeFile, jarFile);
     }
 }

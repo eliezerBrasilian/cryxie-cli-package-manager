@@ -1,10 +1,10 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.Authenticator;
 import alpine.crixie.cli.utiities.LocalStorage;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageManager;
+import alpine.crixie.cli.utiities.requests.Authenticator;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import picocli.CommandLine;
@@ -48,12 +48,14 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
     private static NewVersionRequestDto getNewVersionRequestDto() throws FileNotFoundException {
         PackageLuaModifier packageLuaModifier = new PackageLuaModifier();
 
+        String userId = new LocalStorage().getData().userId();
+
         var data = packageLuaModifier.getData();
         return new NewVersionRequestDto(
                 data.name(),
                 data.version(),
                 data.deps(),
-                "12345",
+                userId,
                 PackageRequestDto.Type.JAVA
         );
     }

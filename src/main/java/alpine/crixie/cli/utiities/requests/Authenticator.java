@@ -1,5 +1,8 @@
-package alpine.crixie.cli.utiities;
+package alpine.crixie.cli.utiities.requests;
 
+import alpine.crixie.cli.utiities.JsonMapper;
+import alpine.crixie.cli.utiities.LocalStorage;
+import alpine.crixie.cli.utiities.RestUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
@@ -55,13 +58,17 @@ public class Authenticator {
             case 200:
                 String body = response.body();
 
-                record AuthResponseDto(String profile_picture, boolean is_membership, String token, String name) {
+                record AuthResponseDto(
+                        String profile_picture,
+                        boolean is_membership, String token, String name, String user_id) {
                 }
 
                 var mapped = new JsonMapper<AuthResponseDto>()
                         .fromJsonToTarget(body, AuthResponseDto.class);
 
-                new LocalStorage().updateData(new LocalStorage.Data(mapped.token, mapped.profile_picture, mapped.name));
+                new LocalStorage().updateData(
+                        new LocalStorage.Data(mapped.token, mapped.profile_picture,
+                                mapped.name, mapped.user_id()));
                 System.out.println("Now you're logged in, try perform your operation again:)");
                 break;
             case 500:

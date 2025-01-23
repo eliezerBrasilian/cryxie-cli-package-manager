@@ -6,7 +6,7 @@ class LocalStorageTest {
 
     @Test
     void load() {
-        new LocalStorage();
+        new LocalStorage().getData();
     }
 
     @Test
