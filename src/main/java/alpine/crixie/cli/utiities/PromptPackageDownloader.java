@@ -1,11 +1,11 @@
 package alpine.crixie.cli.utiities;
 
+import alpine.crixie.cli.utiities.contracts.dependency_downloader.JavaPackageInstallerBase;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,28 +17,26 @@ import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.ZipInputStream;
 
 import static alpine.crixie.cli.utiities.RestUtils.BASE_URL;
 
-//10 planos 5 dist 15 conicas 5 qualicas
-
-public class InstallAllPackages {
-    private final String name;
+public class PromptPackageDownloader extends JavaPackageInstallerBase {
+    private String name;
     private String version = "latest";
     private String outputFilePath;
 
-    public InstallAllPackages(String packageName, String version) {
-        this.name = packageName;
-        this.version = version;
-        if (!version.equals("latest")) {
-            outputFilePath = "cryxie_libs/".concat(name).concat("@" + version).concat(".jar");
-        } else {
-            outputFilePath = "cryxie_libs/".concat(name).concat(".jar");
-        }
+    public PromptPackageDownloader(String packageName) {
+        super(packageName);
     }
 
-    public void download() {
+    public PromptPackageDownloader(String packageName, String version) {
+        super(packageName, version);
+    }
+
+    public record PasscodeRequest(String pass_code) {
+    }
+
+    public void downloadPackage() {
         Set<String> downloadedPackages = new HashSet<>();
         try {
             downloadPackageRecursively(name, version, downloadedPackages);
@@ -47,13 +45,9 @@ public class InstallAllPackages {
         }
     }
 
-    public record PasscodeRequest(String pass_code) {
-    }
-
-    private void downloadPackageRecursively(String packageName,
-                                            String version, Set<String> downloadedPackages)
+    private void downloadPackageRecursively(String packageName, String version, Set<String> downloadedPackages)
             throws IOException, InterruptedException {
-
+        // Evitar redundância
         String packageKey = packageName + "@" + version;
         if (downloadedPackages.contains(packageKey)) {
             System.out.println("Package already downloaded: " + packageKey);
@@ -93,9 +87,9 @@ public class InstallAllPackages {
         Files.createDirectories(Paths.get("cryxie_libs"));
         writeFileFromBytes(bytes);
 
-        addToPomXmlFile(packageName, version);
-
         downloadedPackages.add(packageKey);
+        addToPomXmlFile(packageName, version);
+        addToPackageLuaFile(packageName, version);
 
         // Baixar as dependências recursivamente
         if (!deps.isEmpty()) {
@@ -103,30 +97,21 @@ public class InstallAllPackages {
                 downloadPackageRecursively(dependency.name(), dependency.version(), downloadedPackages);
             }
         }
-
-    }
-
-
-    private void validateJar(byte[] fileBytes) throws IOException {
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(fileBytes);
-             ZipInputStream zis = new ZipInputStream(bais)) {
-            if (zis.getNextEntry() == null) {
-                throw new IOException("The downloaded file is not a valid JAR.");
-            }
-        }
-    }
-
-    void writeFileFromBytes(byte[] fileBytes) {
-        try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
-            outputStream.write(fileBytes);
-        } catch (IOException e) {
-            System.out.println("error on downloading: " + e);
-        }
     }
 
     public void addToPomXmlFile(String packageName, String version) {
         new PomXmlModifier(packageName, version).
                 add();
     }
+
+    public void addToPackageLuaFile(String packageName, String version) {
+        try {
+            PackageLuaModifier modifier = new PackageLuaModifier();
+            modifier.addDependency(packageName, version);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("was not possible to add dependency into package.lua");
+        }
+    }
+
 
 }

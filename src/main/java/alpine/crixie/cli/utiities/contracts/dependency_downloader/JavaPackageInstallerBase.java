@@ -1,5 +1,7 @@
-package alpine.crixie.cli.utiities;
+package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
+import alpine.crixie.cli.utiities.PomXmlModifier;
+import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,9 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,16 +18,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipInputStream;
 
-import static alpine.crixie.cli.utiities.RestUtils.BASE_URL;
-
-//10 planos 5 dist 15 conicas 5 qualicas
-
-public class InstallAllPackages {
+public class JavaPackageInstallerBase {
     private final String name;
     private String version = "latest";
     private String outputFilePath;
+    private PackageRequest packageRequest = new PackageRequest();
 
-    public InstallAllPackages(String packageName, String version) {
+    public JavaPackageInstallerBase(String packageName) {
+        name = packageName;
+        outputFilePath = "cryxie_libs/".concat(name).concat(".jar");
+    }
+
+    public JavaPackageInstallerBase(String packageName, String version) {
         this.name = packageName;
         this.version = version;
         if (!version.equals("latest")) {
@@ -60,16 +61,7 @@ public class InstallAllPackages {
             return;
         }
 
-        String packageUrl = String.format("%s/package/download?name=%s&version=%s", BASE_URL, packageName, version);
-        HttpRequest request = HttpRequest.newBuilder()
-                .header("Content-Type", "application/json")
-                .uri(URI.create(packageUrl))
-                .POST(HttpRequest.BodyPublishers.ofString(new JsonMapper<>(new PasscodeRequest("empty")).toJson()))
-                .build();
-
-        var httpClient = HttpClient.newHttpClient();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = packageRequest.download(packageName, version);
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("Error on downloading package " + packageName + ": " + response.body());
@@ -84,7 +76,6 @@ public class InstallAllPackages {
         String base64Encoded = responseMapped.jarBytesEncoded();
         var deps = responseMapped.deps();
 
-        //BAIXA O JAR
 
         var bytes = Base64.getDecoder().decode(base64Encoded);
         validateJar(bytes);
@@ -96,8 +87,7 @@ public class InstallAllPackages {
         addToPomXmlFile(packageName, version);
 
         downloadedPackages.add(packageKey);
-
-        // Baixar as dependências recursivamente
+        
         if (!deps.isEmpty()) {
             for (PackageRequestDto.Dependency dependency : deps) {
                 downloadPackageRecursively(dependency.name(), dependency.version(), downloadedPackages);
@@ -106,8 +96,7 @@ public class InstallAllPackages {
 
     }
 
-
-    private void validateJar(byte[] fileBytes) throws IOException {
+    protected void validateJar(byte[] fileBytes) throws IOException {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(fileBytes);
              ZipInputStream zis = new ZipInputStream(bais)) {
             if (zis.getNextEntry() == null) {
@@ -116,7 +105,7 @@ public class InstallAllPackages {
         }
     }
 
-    void writeFileFromBytes(byte[] fileBytes) {
+    protected void writeFileFromBytes(byte[] fileBytes) {
         try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
             outputStream.write(fileBytes);
         } catch (IOException e) {
@@ -124,9 +113,10 @@ public class InstallAllPackages {
         }
     }
 
-    public void addToPomXmlFile(String packageName, String version) {
+    protected void addToPomXmlFile(String packageName, String version) {
         new PomXmlModifier(packageName, version).
                 add();
     }
+
 
 }

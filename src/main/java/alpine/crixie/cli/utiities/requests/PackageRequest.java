@@ -2,6 +2,7 @@ package alpine.crixie.cli.utiities.requests;
 
 import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.LocalStorage;
+import alpine.crixie.cli.utiities.PromptPackageDownloader;
 import alpine.crixie.cli.utiities.RestUtils;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 import static alpine.crixie.cli.utiities.CustomMultipart.Part;
 import static alpine.crixie.cli.utiities.CustomMultipart.ofMimeMultipartData;
+import static alpine.crixie.cli.utiities.RestUtils.BASE_URL;
 
 public class PackageRequest {
     final private String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
@@ -60,6 +62,19 @@ public class PackageRequest {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+    public HttpResponse<String> download(String packageName, String version) throws IOException, InterruptedException {
+        String packageUrl = String.format("%s/package/download?name=%s&version=%s", BASE_URL, packageName, version);
+        HttpRequest request = HttpRequest.newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(URI.create(packageUrl))
+                .POST(HttpRequest.BodyPublishers.ofString(new JsonMapper<>(new PromptPackageDownloader.PasscodeRequest("empty")).toJson()))
+                .build();
+
+        var httpClient = HttpClient.newHttpClient();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
+    }
 
     private HttpRequest.BodyPublisher bodyWithMultipartData(File readmeFile, File jarFile, String packageJson) throws IOException {
         var parts = List.of(

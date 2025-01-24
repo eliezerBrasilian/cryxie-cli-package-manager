@@ -1,8 +1,7 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
 import alpine.crixie.cli.mocks.Mocks;
-import alpine.crixie.cli.utiities.PackageDownloader;
-import alpine.crixie.cli.utiities.RestUtils;
+import alpine.crixie.cli.utiities.PromptPackageDownloader;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ class UploadPackageManagerTest {
 
     @Test
     void downloadPackage2() {
-        new PackageDownloader("pacote2", "1.0.0")
+        new PromptPackageDownloader("pacote2", "1.0.0")
                 .downloadPackage();
     }
 
