@@ -1,6 +1,6 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.InstallAllPackages;
+import alpine.crixie.cli.utiities.JavaAllPackagesInstaller;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import picocli.CommandLine;
 
@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
         name = "deps-install",
         description = "Install all dependencies(packages) from package.lua"
 )
-public class InstallAllPackagesCommand implements Runnable {
+public class InstallAllJavaPackagesCommand implements Runnable {
 
     @Override
     public void run() {
@@ -18,7 +18,7 @@ public class InstallAllPackagesCommand implements Runnable {
             var deps = new PackageLuaModifier().getData().deps();
 
             deps.forEach(dependency -> {
-                new InstallAllPackages(dependency.name(), dependency.version()).download();
+                new JavaAllPackagesInstaller(dependency.name(), dependency.version()).download();
             });
             System.out.println("deps installed successfully");
 

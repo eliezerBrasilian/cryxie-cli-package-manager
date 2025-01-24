@@ -1,5 +1,6 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
+import alpine.crixie.cli.utiities.PomXmlModifier;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -80,6 +81,8 @@ public abstract class JavaPackageInstallerBase {
 
         Files.createDirectories(Paths.get("cryxie_libs"));
         writeFileFromBytes(bytes);
+        
+        addToPomXmlFile(packageName, version);
 
         downloadedPackages.add(packageKey);
         return deps;
@@ -108,6 +111,11 @@ public abstract class JavaPackageInstallerBase {
         } catch (IOException e) {
             System.out.println("error on downloading: " + e);
         }
+    }
+
+    private void addToPomXmlFile(String packageName, String version) {
+        new PomXmlModifier(packageName, version).
+                add(outputFilePath);
     }
 
 }

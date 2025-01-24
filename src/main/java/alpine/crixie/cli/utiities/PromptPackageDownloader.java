@@ -29,8 +29,6 @@ public class PromptPackageDownloader extends JavaPackageInstallerBase {
 
         if (deps == null) return;
 
-        addToPomXmlFile(packageName, version);
-
         addBaseDependencyInPackageLua(packageName, version, deps);
 
         if (!deps.isEmpty()) {
@@ -46,11 +44,6 @@ public class PromptPackageDownloader extends JavaPackageInstallerBase {
         }
     }
 
-    private void addToPomXmlFile(String packageName, String version) {
-        new PomXmlModifier(packageName, version).
-                add(outputFilePath);
-    }
-
     private void addToPackageLuaFile(String packageName, String version) {
         try {
             PackageLuaModifier modifier = new PackageLuaModifier();
@@ -59,6 +52,5 @@ public class PromptPackageDownloader extends JavaPackageInstallerBase {
             throw new RuntimeException("was not possible to add dependency into package.lua");
         }
     }
-
-
+    
 }
