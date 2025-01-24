@@ -5,6 +5,7 @@ import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class PromptPackageDownloader extends JavaPackageInstallerBase {
@@ -27,13 +28,21 @@ public class PromptPackageDownloader extends JavaPackageInstallerBase {
                 packageName, version, downloadedPackages);
 
         if (deps == null) return;
+
         addToPomXmlFile(packageName, version);
-        addToPackageLuaFile(packageName, version);
+
+        addBaseDependencyInPackageLua(packageName, version, deps);
 
         if (!deps.isEmpty()) {
             for (PackageRequestDto.Dependency dependency : deps) {
                 downloadPackageRecursively(dependency.name(), dependency.version(), downloadedPackages);
             }
+        }
+    }
+
+    private void addBaseDependencyInPackageLua(String packageName, String version, List<PackageRequestDto.Dependency> deps) {
+        if (deps.size() == 1) {
+            addToPackageLuaFile(packageName, version);
         }
     }
 
