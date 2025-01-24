@@ -54,9 +54,9 @@
     <dependency>
       <groupId>pacote2</groupId>
       <artifactId>pacote2</artifactId>
-      <version>1.0.0</version>
+      <version>latest</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/cryxie_libs/pacote2@1.0.0.jar</systemPath>
+      <systemPath>${project.basedir}/cryxie_libs/pacote2.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>pacote1</groupId>

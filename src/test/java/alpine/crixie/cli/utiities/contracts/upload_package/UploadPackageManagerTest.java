@@ -12,8 +12,8 @@ class UploadPackageManagerTest {
 
     @Test
     void downloadPackage2() {
-        new PromptPackageDownloader("pacote2", "1.0.0")
-                .downloadPackage();
+        var ppd = new PromptPackageDownloader("pacote2", "1.0.0");
+        ppd.download();
     }
 
     //enviando pacote 2 com pacote como dependencia

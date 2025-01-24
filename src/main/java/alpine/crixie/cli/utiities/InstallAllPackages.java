@@ -21,7 +21,6 @@ import java.util.zip.ZipInputStream;
 
 import static alpine.crixie.cli.utiities.RestUtils.BASE_URL;
 
-//10 planos 5 dist 15 conicas 5 qualicas
 
 public class InstallAllPackages {
     private final String name;
@@ -126,7 +125,7 @@ public class InstallAllPackages {
 
     public void addToPomXmlFile(String packageName, String version) {
         new PomXmlModifier(packageName, version).
-                add();
+                add(outputFilePath);
     }
 
 }

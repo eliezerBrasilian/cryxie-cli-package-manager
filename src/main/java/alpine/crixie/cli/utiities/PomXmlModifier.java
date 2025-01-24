@@ -30,14 +30,7 @@ public class PomXmlModifier {
         this.name = name;
     }
 
-    public void add() {
-        String jarFilePath;
-
-        if (!version.equals("latest")) {
-            jarFilePath = "cryxie_libs/".concat(name).concat("@" + version).concat(".jar");
-        } else {
-            jarFilePath = "cryxie_libs/".concat(name).concat(".jar");
-        }
+    public void add(String jarFilePath) {
 
         try {
             // Lê o POM existente

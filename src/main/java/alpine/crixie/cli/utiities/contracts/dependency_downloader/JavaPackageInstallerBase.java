@@ -1,6 +1,5 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
-import alpine.crixie.cli.utiities.PomXmlModifier;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,11 +17,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipInputStream;
 
-public class JavaPackageInstallerBase {
+public abstract class JavaPackageInstallerBase {
     private final String name;
     private String version = "latest";
-    private String outputFilePath;
-    private PackageRequest packageRequest = new PackageRequest();
+    protected String outputFilePath;
+    protected final PackageRequest packageRequest = new PackageRequest();
 
     public JavaPackageInstallerBase(String packageName) {
         name = packageName;
@@ -32,11 +31,7 @@ public class JavaPackageInstallerBase {
     public JavaPackageInstallerBase(String packageName, String version) {
         this.name = packageName;
         this.version = version;
-        if (!version.equals("latest")) {
-            outputFilePath = "cryxie_libs/".concat(name).concat("@" + version).concat(".jar");
-        } else {
-            outputFilePath = "cryxie_libs/".concat(name).concat(".jar");
-        }
+        defineOutputFilePathForPackage(name, version);
     }
 
     public void download() {
@@ -51,14 +46,16 @@ public class JavaPackageInstallerBase {
     public record PasscodeRequest(String pass_code) {
     }
 
-    private void downloadPackageRecursively(String packageName,
-                                            String version, Set<String> downloadedPackages)
-            throws IOException, InterruptedException {
+    protected abstract void downloadPackageRecursively(
+            String packageName, String version, Set<String> downloadedPackages)
+            throws IOException, InterruptedException;
 
+    protected List<PackageRequestDto.Dependency> performCommonOperationsAndGetDependencies(
+            String packageName, String version, Set<String> downloadedPackages) throws IOException, InterruptedException {
         String packageKey = packageName + "@" + version;
         if (downloadedPackages.contains(packageKey)) {
             System.out.println("Package already downloaded: " + packageKey);
-            return;
+            return null;
         }
 
         HttpResponse<String> response = packageRequest.download(packageName, version);
@@ -76,24 +73,24 @@ public class JavaPackageInstallerBase {
         String base64Encoded = responseMapped.jarBytesEncoded();
         var deps = responseMapped.deps();
 
-
         var bytes = Base64.getDecoder().decode(base64Encoded);
         validateJar(bytes);
 
-        outputFilePath = "cryxie_libs/".concat(packageName).concat("@" + version).concat(".jar");
+        defineOutputFilePathForPackage(packageName, version);
+
         Files.createDirectories(Paths.get("cryxie_libs"));
         writeFileFromBytes(bytes);
 
-        addToPomXmlFile(packageName, version);
-
         downloadedPackages.add(packageKey);
-        
-        if (!deps.isEmpty()) {
-            for (PackageRequestDto.Dependency dependency : deps) {
-                downloadPackageRecursively(dependency.name(), dependency.version(), downloadedPackages);
-            }
-        }
+        return deps;
+    }
 
+    private void defineOutputFilePathForPackage(String packageName, String version) {
+        if (!version.equals("latest")) {
+            outputFilePath = "cryxie_libs/".concat(packageName).concat("@" + version).concat(".jar");
+        } else {
+            outputFilePath = "cryxie_libs/".concat(packageName).concat(".jar");
+        }
     }
 
     protected void validateJar(byte[] fileBytes) throws IOException {
@@ -112,11 +109,5 @@ public class JavaPackageInstallerBase {
             System.out.println("error on downloading: " + e);
         }
     }
-
-    protected void addToPomXmlFile(String packageName, String version) {
-        new PomXmlModifier(packageName, version).
-                add();
-    }
-
 
 }

@@ -36,13 +36,15 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
     @Override
     public void download(PasswordCallback callback) {
         new PromptPackageDownloader(packageName, version)
-                .downloadPackage();
+                .download();
     }
 
     @Override
     public void addToPomXmlFile() {
+        var outputFilePath = "cryxie_libs/".concat(packageName).concat("@" + version).concat(".jar");
+
         new PomXmlModifier(packageName, version).
-                add();
+                add(outputFilePath);
     }
 
     @Override
