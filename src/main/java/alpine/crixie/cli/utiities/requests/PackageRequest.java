@@ -2,8 +2,6 @@ package alpine.crixie.cli.utiities.requests;
 
 import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.LocalStorage;
-import alpine.crixie.cli.utiities.PromptPackageDownloader;
-import alpine.crixie.cli.utiities.RestUtils;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
@@ -15,11 +13,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static alpine.crixie.cli.utiities.CustomMultipart.Part;
 import static alpine.crixie.cli.utiities.CustomMultipart.ofMimeMultipartData;
-import static alpine.crixie.cli.utiities.RestUtils.BASE_URL;
+import static alpine.crixie.cli.utiities.Utils.BASE_URL;
 
 public class PackageRequest {
     final private String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
@@ -32,7 +31,7 @@ public class PackageRequest {
         //String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoIiwic3ViIjoiYWxwaW5pc3RhbWVzdHJlQHlhaG9vLmNvbSIsImV4cCI6MTczNzQxNjA5OH0.Pe_SLTl2z9xVbUpDQQfZgaR7hWeoh-91sEkYW5i944g";
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(RestUtils.BASE_URL + "/package"))
+                .uri(URI.create(BASE_URL + "/package"))
                 .header("Authorization", "Bearer " + bearerToken)
                 .header("Content-Type", "multipart/form-data; boundary=" + boundary)
                 .header("Accept", "application/json")
@@ -44,7 +43,7 @@ public class PackageRequest {
 
     public HttpResponse<String> sendNewVersion(NewVersionRequestDto newVersionRequestDto,
                                                File jarFile) throws IOException, InterruptedException {
-        String url = RestUtils.BASE_URL + "/package/add-new-version";
+        String url = BASE_URL + "/package/add-new-version";
 
         String json = new JsonMapper<>(newVersionRequestDto).toJson();
 
@@ -62,12 +61,19 @@ public class PackageRequest {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public HttpResponse<String> download(String packageName, String version) throws IOException, InterruptedException {
+    public HttpResponse<String> download(String packageName, String version, String passCode) throws IOException, InterruptedException {
         String packageUrl = String.format("%s/package/download?name=%s&version=%s", BASE_URL, packageName, version);
+
+        var userId = new LocalStorage().getData().userId();
+
+        var body = new JsonMapper<>().fromFields(
+                Map.entry("pass_code", passCode),
+                Map.entry("user_id", userId)).toJson();
+
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(URI.create(packageUrl))
-                .POST(HttpRequest.BodyPublishers.ofString(new JsonMapper<>(new PromptPackageDownloader.PasscodeRequest("empty")).toJson()))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
         var httpClient = HttpClient.newHttpClient();

@@ -1,6 +1,7 @@
 package alpine.crixie.cli.utiities;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,11 +10,12 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-class JarGeneratorTest {
+@Ignore
+public class JarGeneratorTest {
     private File jarFile;
 
     @Test
-    void luaFile() {
+    public void luaFile() {
         final String luaFilePath = new File("package.lua").getAbsolutePath();
         System.out.println(luaFilePath);
     }

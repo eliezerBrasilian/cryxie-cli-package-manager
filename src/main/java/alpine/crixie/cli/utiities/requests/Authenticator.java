@@ -2,7 +2,7 @@ package alpine.crixie.cli.utiities.requests;
 
 import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.LocalStorage;
-import alpine.crixie.cli.utiities.RestUtils;
+import alpine.crixie.cli.utiities.Utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class Authenticator {
                             Map.entry("password", pass))
                     .fieldsToJson();
 
-            var request = HttpRequest.newBuilder(new URI(RestUtils.BASE_URL + "/auth/login"))
+            var request = HttpRequest.newBuilder(new URI(Utils.BASE_URL + "/auth/login"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(body))
                     .build();

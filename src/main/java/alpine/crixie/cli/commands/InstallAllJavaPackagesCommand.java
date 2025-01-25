@@ -1,7 +1,7 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.JavaAllPackagesInstaller;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
+import alpine.crixie.cli.utiities.contracts.dependency_downloader.JavaAllPackagesInstaller;
 import picocli.CommandLine;
 
 import java.io.FileNotFoundException;

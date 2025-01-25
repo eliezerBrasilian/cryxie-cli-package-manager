@@ -1,7 +1,7 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
 import alpine.crixie.cli.utiities.JarGenerator;
-import alpine.crixie.cli.utiities.RestUtils;
+import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
@@ -43,8 +43,8 @@ public class UploadPackageManager {
             System.out.println("jar was generated successfully");
             var jarFile = generator.getJarFile();
 
-            return RestUtils.sendNewVersion(
-                    newVersionRequestDto, jarFile);
+            return new PackageRequest().sendNewVersion(
+                    newVersionRequestDto, jarFile).statusCode();
         } catch (ConnectException e) {
             throw new RuntimeException("can't send package looks live server is busy or off");
         } catch (IOException | InterruptedException e) {

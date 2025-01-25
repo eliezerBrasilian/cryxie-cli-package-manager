@@ -143,13 +143,16 @@ public class PackageLuaModifier {
     }
 
     public record PackageData(
-            String name, String version, String directoryWhereMainFileIs, String description, String repositoryUrl,
+            String name, String version, String directoryWhereMainFileIs,
+            String description, String repositoryUrl,
             List<PackageRequestDto.Dependency> deps) {
     }
 
     public PackageData getData() {
-        return new PackageData(this.name, this.version, this.directoryWhereMainFileIs, this.description,
+        return new PackageData(this.name, this.version, this.directoryWhereMainFileIs,
+                this.description,
                 this.repositoryUrl, deps);
     }
+
 }
 

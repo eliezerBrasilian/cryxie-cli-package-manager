@@ -8,11 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JsonMapper<T> {
-    private Object o;
-    Map.Entry<String, Object>[] objects;
+    private Object o = null;
+    Map.Entry<String, Object>[] objects = null;
 
     public JsonMapper() {
-
     }
 
     public JsonMapper(Object o) {
@@ -20,6 +19,10 @@ public class JsonMapper<T> {
     }
 
     public String toJson() throws JsonProcessingException {
+        if (o == null) {
+            return fieldsToJson();
+        }
+
         var objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(o);
     }

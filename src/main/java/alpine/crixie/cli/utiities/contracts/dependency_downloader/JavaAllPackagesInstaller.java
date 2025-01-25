@@ -1,6 +1,5 @@
-package alpine.crixie.cli.utiities;
+package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
-import alpine.crixie.cli.utiities.contracts.dependency_downloader.JavaPackageInstallerBase;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.IOException;

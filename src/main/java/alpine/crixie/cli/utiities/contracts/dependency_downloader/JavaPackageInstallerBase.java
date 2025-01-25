@@ -7,15 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 public abstract class JavaPackageInstallerBase {
@@ -44,9 +42,6 @@ public abstract class JavaPackageInstallerBase {
         }
     }
 
-    public record PasscodeRequest(String pass_code) {
-    }
-
     protected abstract void downloadPackageRecursively(
             String packageName, String version, Set<String> downloadedPackages)
             throws IOException, InterruptedException;
@@ -54,12 +49,33 @@ public abstract class JavaPackageInstallerBase {
     protected List<PackageRequestDto.Dependency> performCommonOperationsAndGetDependencies(
             String packageName, String version, Set<String> downloadedPackages) throws IOException, InterruptedException {
         String packageKey = packageName + "@" + version;
-        if (downloadedPackages.contains(packageKey)) {
+
+        if (packageIsAlreadyInstalled(packageKey, downloadedPackages)) {
             System.out.println("Package already downloaded: " + packageKey);
             return null;
         }
 
-        HttpResponse<String> response = packageRequest.download(packageName, version);
+        HttpResponse<String> response;
+        int statusCode;
+
+        var packageWasPrivate = false;
+
+        var scanner = new Scanner(System.in);
+        do {
+            String passcode = "empty";
+            if (packageWasPrivate) {
+                System.out.print("Type the pass code: ");
+                passcode = scanner.nextLine();
+            }
+            response = packageRequest.download(packageName, version, passcode);
+            statusCode = response.statusCode();
+
+            if (statusCode == 401) {
+                packageWasPrivate = true;
+            }
+
+        } while (statusCode == 401);
+
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("Error on downloading package " + packageName + ": " + response.body());
@@ -81,11 +97,17 @@ public abstract class JavaPackageInstallerBase {
 
         Files.createDirectories(Paths.get("cryxie_libs"));
         writeFileFromBytes(bytes);
-        
+
         addToPomXmlFile(packageName, version);
 
         downloadedPackages.add(packageKey);
         return deps;
+    }
+
+    private boolean packageIsAlreadyInstalled(String packageKey, Set<String> downloadedPackages) {
+        var exists = new File(outputFilePath).exists();
+
+        return downloadedPackages.contains(packageKey) && exists;
     }
 
     private void defineOutputFilePathForPackage(String packageName, String version) {

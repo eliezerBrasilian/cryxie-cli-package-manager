@@ -1,6 +1,5 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyManager;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -14,7 +13,9 @@ public class UninstallCommand implements Runnable {
 
     @Override
     public void run() {
-        new DependencyManager(packageName).uninstall();
+       /*
+       implementar codigo para desinstalar pacotes
+        */
     }
 
 }
