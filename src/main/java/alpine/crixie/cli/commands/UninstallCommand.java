@@ -20,7 +20,7 @@ public class UninstallCommand implements Runnable {
 
         try {
             //ddi.removeFromPomXmlFile();
-            //ddi.removePackageFromLuaFile();
+            ddi.removePackageFromLuaFile();
             ddi.removePackageFromCryxieLibsDirectory();
         } catch (FileNotFoundException e) {
             System.err.print("Was not possible to uninstall completely the file: " + e.getMessage());

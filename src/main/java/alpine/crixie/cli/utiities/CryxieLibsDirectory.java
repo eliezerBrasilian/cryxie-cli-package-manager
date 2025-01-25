@@ -48,14 +48,10 @@ public class CryxieLibsDirectory {
                     } else {
                         throw new RuntimeException("Could not delete file (try again): " + jarName);
                     }
-                } else {
-                    throw new FileNotFoundException("File " + jarName + " not found in cryxie_libs directory.");
                 }
             } catch (RuntimeException e) {
                 runtimeErrorHappened = true;
             }
-
         } while (runtimeErrorHappened);
-
     }
 }
