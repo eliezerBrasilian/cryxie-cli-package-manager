@@ -1,6 +1,9 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyDownloaderImpl;
 import picocli.CommandLine;
+
+import java.io.FileNotFoundException;
 
 @CommandLine.Command(
         name = "uninstall",
@@ -13,9 +16,15 @@ public class UninstallCommand implements Runnable {
 
     @Override
     public void run() {
-       /*
-       implementar codigo para desinstalar pacotes
-        */
+        var ddi = new DependencyDownloaderImpl(packageName);
+
+        try {
+            //ddi.removeFromPomXmlFile();
+            //ddi.removePackageFromLuaFile();
+            ddi.removePackageFromCryxieLibsDirectory();
+        } catch (FileNotFoundException e) {
+            System.err.print("Was not possible to uninstall completely the file: " + e.getMessage());
+        }
     }
 
 }

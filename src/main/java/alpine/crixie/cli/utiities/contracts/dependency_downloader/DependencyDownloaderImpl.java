@@ -14,11 +14,6 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
     String packageName;
     String version = "latest";
 
-    public DependencyDownloaderImpl(String packageName, String version) {
-        this.packageName = packageName;
-        this.version = version;
-    }
-
     public DependencyDownloaderImpl(String pesquisa) {
         this.pesquisa = pesquisa;
         splitNameVersion();

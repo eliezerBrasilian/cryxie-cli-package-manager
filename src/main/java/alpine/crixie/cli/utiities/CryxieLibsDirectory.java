@@ -37,14 +37,25 @@ public class CryxieLibsDirectory {
         String jarFilePath = "cryxie_libs/" + jarName;
         File jarFile = new File(jarFilePath);
 
-        if (jarFile.exists()) {
-            if (jarFile.delete()) {
-                System.out.println("File " + jarName + " was successfully deleted.");
-            } else {
-                throw new RuntimeException("Could not delete file (try again): " + jarName);
+        boolean runtimeErrorHappened = false;
+
+        do {
+            try {
+                if (jarFile.exists()) {
+
+                    if (jarFile.delete()) {
+                        System.out.println("File " + jarName + " was successfully deleted.");
+                    } else {
+                        throw new RuntimeException("Could not delete file (try again): " + jarName);
+                    }
+                } else {
+                    throw new FileNotFoundException("File " + jarName + " not found in cryxie_libs directory.");
+                }
+            } catch (RuntimeException e) {
+                runtimeErrorHappened = true;
             }
-        } else {
-            throw new FileNotFoundException("File " + jarName + " not found in cryxie_libs directory.");
-        }
+
+        } while (runtimeErrorHappened);
+
     }
 }
