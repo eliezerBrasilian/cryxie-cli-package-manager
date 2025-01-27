@@ -25,7 +25,7 @@ public class PackageLuaModifier {
 
     public PackageLuaModifier() throws FileNotFoundException {
         File luaFile = new File(LUA_FILE_PATH);
-        System.out.println("Absolute path: " + luaFile.getAbsolutePath());
+        //System.out.println("Absolute path: " + luaFile.getAbsolutePath());
         if (!luaFile.exists()) {
             throw new FileNotFoundException("file package.lua not found at " + LUA_FILE_PATH);
         }
@@ -101,8 +101,6 @@ public class PackageLuaModifier {
 
             // Salva as mudanças no arquivo Lua
             saveLuaFile();
-        } else {
-            System.out.println("Dependency '" + name + "' not found.");
         }
     }
 

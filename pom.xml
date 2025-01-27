@@ -51,6 +51,13 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/cryxie_libs/pacote1@1.0.1.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>pacote1</groupId>
+      <artifactId>pacote1</artifactId>
+      <version>1.0.1</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/cryxie_libs/pacote1@1.0.1.jar</systemPath>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

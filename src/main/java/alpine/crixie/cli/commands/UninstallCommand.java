@@ -19,7 +19,7 @@ public class UninstallCommand implements Runnable {
         var ddi = new DependencyDownloaderImpl(packageName);
 
         try {
-            //ddi.removeFromPomXmlFile();
+            ddi.removeFromPomXmlFile();
             ddi.removePackageFromLuaFile();
             ddi.removePackageFromCryxieLibsDirectory();
         } catch (FileNotFoundException e) {
