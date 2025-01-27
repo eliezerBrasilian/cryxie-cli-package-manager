@@ -1,5 +1,6 @@
 package alpine.crixie.cli.utiities;
 
+import alpine.crixie.cli.components.PackageLuaComponent;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaString;
@@ -27,7 +28,8 @@ public class PackageLuaModifier {
         File luaFile = new File(LUA_FILE_PATH);
         //System.out.println("Absolute path: " + luaFile.getAbsolutePath());
         if (!luaFile.exists()) {
-            throw new FileNotFoundException("file package.lua not found at " + LUA_FILE_PATH);
+            new PackageLuaComponent();
+            // throw new FileNotFoundException("file package.lua not found at " + LUA_FILE_PATH);
         }
         load();
     }

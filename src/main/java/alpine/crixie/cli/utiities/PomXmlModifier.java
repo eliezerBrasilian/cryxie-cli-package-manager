@@ -33,8 +33,12 @@ public class PomXmlModifier {
     public void add(String jarFilePath) {
 
         try {
-            // Lê o POM existente
             File pomFile = new File("pom.xml");
+
+            if (!pomFile.exists()) {
+                return;
+            }
+
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(pomFile);
 
@@ -104,6 +108,9 @@ public class PomXmlModifier {
         try {
             // Lê o POM existente
             File pomFile = new File("pom.xml");
+            if (!pomFile.exists()) {
+                return;
+            }
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(pomFile);
 

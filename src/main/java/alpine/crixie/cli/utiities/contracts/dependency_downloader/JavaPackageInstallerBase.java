@@ -37,8 +37,9 @@ public abstract class JavaPackageInstallerBase {
         Set<String> downloadedPackages = new HashSet<>();
         try {
             downloadPackageRecursively(name, version, downloadedPackages);
-        } catch (Exception e) {
-            throw new RuntimeException("Error on downloading package: " + e.getMessage());
+            System.out.printf("Package %s was installed :)", name);
+        } catch (IOException | InterruptedException | RuntimeException e) {
+            System.err.print(e.getMessage());
         }
     }
 
@@ -76,8 +77,11 @@ public abstract class JavaPackageInstallerBase {
 
         } while (statusCode == 401);
 
+        if (statusCode == 400) {
+            throw new RuntimeException("Package doesn't exist in cryxie repositories");
+        }
 
-        if (response.statusCode() != 200) {
+        if (statusCode != 200) {
             throw new RuntimeException("Error on downloading package " + packageName + ": " + response.body());
         }
 

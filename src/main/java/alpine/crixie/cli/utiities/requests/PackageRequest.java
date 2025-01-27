@@ -61,7 +61,7 @@ public class PackageRequest {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public HttpResponse<String> download(String packageName, String version, String passCode) throws IOException, InterruptedException {
+    public HttpResponse<String> download(String packageName, String version, String passCode) throws IOException {
         String packageUrl = String.format("%s/package/download?name=%s&version=%s", BASE_URL, packageName, version);
 
         var userId = new LocalStorage().getData().userId();
@@ -78,7 +78,13 @@ public class PackageRequest {
 
         var httpClient = HttpClient.newHttpClient();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response;
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Error on downloading package, looks like the server is busy or off :(");
+        }
+
         return response;
     }
 

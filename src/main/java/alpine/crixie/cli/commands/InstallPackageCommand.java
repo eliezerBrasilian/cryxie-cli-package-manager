@@ -15,13 +15,7 @@ public class InstallPackageCommand implements Runnable {
     @Override
     public void run() {
 
-        new DependencyDownloaderImpl(packageName).download((s, r) -> {
-//            var scanner = new Scanner(System.in);
-//
-//            System.out.print("Enter the passcode: ");
-//            String passcode = scanner.nextLine();
-//            scanner.close();
-        });
+        new DependencyDownloaderImpl(packageName).download();
     }
 
 }

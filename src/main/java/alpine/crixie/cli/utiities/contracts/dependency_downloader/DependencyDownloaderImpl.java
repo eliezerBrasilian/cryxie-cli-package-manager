@@ -1,7 +1,6 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
 import alpine.crixie.cli.utiities.CryxieLibsDirectory;
-import alpine.crixie.cli.utiities.FileDownloader.PasswordCallback;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.PomXmlModifier;
 import alpine.crixie.cli.utiities.PromptPackageDownloader;
@@ -28,8 +27,7 @@ public class DependencyDownloaderImpl implements DependencyDownloader {
         }
     }
 
-    @Override
-    public void download(PasswordCallback callback) {
+    public void download() {
         new PromptPackageDownloader(packageName, version)
                 .download();
     }
