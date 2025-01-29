@@ -7,6 +7,7 @@ import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,7 +29,7 @@ public class PackageRequest {
         String packageJson = new JsonMapper<>(packageRequestDto).toJson();
 
         String bearerToken = new LocalStorage().getData().token();
-        //String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoIiwic3ViIjoiYWxwaW5pc3RhbWVzdHJlQHlhaG9vLmNvbSIsImV4cCI6MTczNzQxNjA5OH0.Pe_SLTl2z9xVbUpDQQfZgaR7hWeoh-91sEkYW5i944g";
+
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/package"))
@@ -38,7 +39,11 @@ public class PackageRequest {
                 .POST(bodyWithMultipartData(readmeFile, jarFile, packageJson))
                 .build();
 
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (ConnectException e) {
+            throw new RuntimeException("Error on uploading package, looks like the server is busy or off :(");
+        }
     }
 
     public HttpResponse<String> sendNewVersion(NewVersionRequestDto newVersionRequestDto,

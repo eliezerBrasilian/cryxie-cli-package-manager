@@ -4,11 +4,12 @@ import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.http.HttpResponse;
 
 public interface UploadPackageContract {
     void generateJar() throws FileNotFoundException, IOException;
 
     void obtainReadmePath();
 
-    int sendPackage(PackageRequestDto packageRequestDto) throws IOException, InterruptedException;
+    HttpResponse<String> sendPackage(PackageRequestDto packageRequestDto) throws IOException, InterruptedException;
 }

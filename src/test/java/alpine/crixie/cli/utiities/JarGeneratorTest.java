@@ -29,10 +29,10 @@ public class JarGeneratorTest {
         String jarName = name + "@" + version + ".jar";
 
         // Caminho para salvar o arquivo .jar
-        jarFile = new File(System.getProperty("user.dir") + "/builds/" + jarName);
+        jarFile = new File(System.getProperty("user.dir") + "/build/" + jarName);
 
         // Certifique-se de que a pasta "builds" exista
-        File buildsDir = new File(System.getProperty("user.dir") + "/builds");
+        File buildsDir = new File(System.getProperty("user.dir") + "/build");
         if (!buildsDir.exists()) {
             buildsDir.mkdirs();
         }

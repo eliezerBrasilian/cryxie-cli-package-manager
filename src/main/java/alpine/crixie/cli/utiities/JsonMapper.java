@@ -45,7 +45,7 @@ public class JsonMapper<T> {
         return mapper.writeValueAsString(jsonMap);
     }
 
-    public T fromJsonToTarget(String json, Class<T> klass) throws JsonProcessingException {
+    public T fromJsonToTargetClass(String json, Class<T> klass) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         //não lança excessão se vier campos a mais que eu não existe no meu dto
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

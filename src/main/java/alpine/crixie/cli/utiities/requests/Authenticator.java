@@ -64,7 +64,7 @@ public class Authenticator {
                 }
 
                 var mapped = new JsonMapper<AuthResponseDto>()
-                        .fromJsonToTarget(body, AuthResponseDto.class);
+                        .fromJsonToTargetClass(body, AuthResponseDto.class);
 
                 new LocalStorage().updateData(
                         new LocalStorage.Data(mapped.token, mapped.profile_picture,

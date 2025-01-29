@@ -1,26 +1,25 @@
 package alpine.crixie.cli.commands;
 
 import alpine.crixie.cli.utiities.LocalStorage;
-import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageManager;
 import alpine.crixie.cli.utiities.requests.Authenticator;
-import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import picocli.CommandLine;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+
+import static alpine.crixie.cli.utiities.Utils.getPackageData;
 
 @CommandLine.Command(
-        name = "upload",
-        description = "Upload a specified package."
+        name = "build-and-upload",
+        description = "build and upload automatically package created from project"
 )
-public class UploadJavaPackageCommand implements Runnable {
+public class BuildAndUploadJavaPackageCommand implements Runnable {
 
     @Override
     public void run() {
         try {
-            var packageRequestDto = getPackageRequestDto();
+            var packageRequestDto = getPackageData();
 
             var manager = new UploadPackageManager(new UploadPackageImpl());
 
@@ -43,24 +42,6 @@ public class UploadJavaPackageCommand implements Runnable {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static PackageRequestDto getPackageRequestDto() throws FileNotFoundException {
-        var data = new PackageLuaModifier().getData();
-        String userId = new LocalStorage().getData().userId();
-        
-        return new PackageRequestDto(
-                data.name(),
-                data.directoryWhereMainFileIs(),
-                data.description(),
-                true,
-                userId,
-                data.repositoryUrl(),
-                new ArrayList<>(),
-                data.version(),
-                data.deps(),
-                PackageRequestDto.Type.JAVA
-        );
     }
 
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "build",
-        description = "build project into a package."
+        description = "build java project into a package."
 )
 public class BuildJavaPackageCommand implements Runnable {
     @Override

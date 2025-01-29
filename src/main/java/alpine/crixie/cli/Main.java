@@ -17,10 +17,11 @@ public class Main {
                         InitCommand.class,
                         CommandLine.HelpCommand.class,
                         UninstallCommand.class,
-                        UploadJavaPackageCommand.class,
+                        BuildAndUploadJavaPackageCommand.class,
                         BuildJavaPackageCommand.class,
                         UploadNewJavaVersionPackageCommand.class,
-                        InstallAllJavaPackagesCommand.class
+                        InstallAllJavaPackagesCommand.class,
+                        UploadJavaPackageCommand.class
                 }
         )
         class CliCommand implements Runnable {

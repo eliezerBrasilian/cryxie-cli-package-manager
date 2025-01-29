@@ -24,7 +24,7 @@ public class UploadPackageManager {
             uploadPackageContract.obtainReadmePath();
 
             System.out.println("readme file was obtained");
-            return uploadPackageContract.sendPackage(packageRequestDto);
+            return uploadPackageContract.sendPackage(packageRequestDto).statusCode();
         } catch (ConnectException e) {
             throw new RuntimeException("can't send package looks live server is busy or off");
         } catch (IOException | InterruptedException e) {
