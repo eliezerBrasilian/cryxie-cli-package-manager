@@ -1,6 +1,6 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
-import alpine.crixie.cli.utiities.JarGenerator;
+import alpine.crixie.cli.utiities.JarGeneratorNewVersion;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
@@ -26,7 +26,7 @@ public class UploadPackageManager {
             System.out.println("readme file was obtained");
             return uploadPackageContract.sendPackage(packageRequestDto).statusCode();
         } catch (ConnectException e) {
-            throw new RuntimeException("can't send package looks live server is busy or off");
+            throw new RuntimeException("can't send package looks like server is busy or off");
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +38,7 @@ public class UploadPackageManager {
         try {
             System.out.println("starting building project");
 
-            JarGenerator generator = new JarGenerator();
+            JarGeneratorNewVersion generator = new JarGeneratorNewVersion();
             generator.generateJar();
             System.out.println("jar was generated successfully");
             var jarFile = generator.getJarFile();
@@ -46,7 +46,7 @@ public class UploadPackageManager {
             return new PackageRequest().sendNewVersion(
                     newVersionRequestDto, jarFile).statusCode();
         } catch (ConnectException e) {
-            throw new RuntimeException("can't send package looks live server is busy or off");
+            throw new RuntimeException("can't send package looks like server is busy or off");
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
