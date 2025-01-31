@@ -1,6 +1,6 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.JarGenerator;
+import alpine.crixie.cli.utiities.JarGeneratorNewVersion;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -14,11 +14,13 @@ public class BuildJavaPackageCommand implements Runnable {
     public void run() {
 
         try {
-            JarGenerator generator = new JarGenerator();
+            var generator = new JarGeneratorNewVersion();
             generator.generateJar();
             System.out.println("Package build completed successfully!");
         } catch (IOException e) {
             throw new RuntimeException("An error occurred during the build process.", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
