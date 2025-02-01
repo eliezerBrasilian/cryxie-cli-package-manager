@@ -7,6 +7,7 @@ local_storage.lua
 cryxie-1.0.0
 cryxie_libs
 builds
+libs
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

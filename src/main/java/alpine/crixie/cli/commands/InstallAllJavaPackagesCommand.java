@@ -5,7 +5,7 @@ import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import alpine.crixie.cli.utiities.contracts.dependency_downloader.JavaAllPackagesInstaller;
 import picocli.CommandLine;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "deps-install",
@@ -17,6 +17,7 @@ public class InstallAllJavaPackagesCommand implements Runnable {
     public void run() {
         try {
             new VSCodeSettingsManager();
+
             var deps = new PackageLuaModifier().getData().deps();
 
             deps.forEach(dependency -> {
@@ -24,7 +25,7 @@ public class InstallAllJavaPackagesCommand implements Runnable {
             });
             System.out.println("deps installed successfully");
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,8 +1,11 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.IntellijCryxieXmlManager;
 import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyDownloaderImpl;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "install",
@@ -15,8 +18,12 @@ public class InstallPackageCommand implements Runnable {
 
     @Override
     public void run() {
-        new VSCodeSettingsManager();
-        new DependencyDownloaderImpl(packageName).download();
+        try {
+            new VSCodeSettingsManager();
+            new IntellijCryxieXmlManager();
+            new DependencyDownloaderImpl(packageName).download();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
-
 }
