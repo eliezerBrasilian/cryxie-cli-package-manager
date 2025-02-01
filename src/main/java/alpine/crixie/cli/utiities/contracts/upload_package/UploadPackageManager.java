@@ -40,6 +40,7 @@ public class UploadPackageManager {
 
             JarGeneratorNewVersion generator = new JarGeneratorNewVersion();
             generator.generateJar();
+            
             System.out.println("jar was generated successfully");
             var jarFile = generator.getJarFile();
 

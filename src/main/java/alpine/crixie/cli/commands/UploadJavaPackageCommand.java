@@ -21,7 +21,6 @@ import static alpine.crixie.cli.utiities.Utils.getPackageData;
         name = "upload",
         description = "upload java project to cryxie repositories"
 )
-@Deprecated
 public class UploadJavaPackageCommand implements Runnable {
 
     @Override
