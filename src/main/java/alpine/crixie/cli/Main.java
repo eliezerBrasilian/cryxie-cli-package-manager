@@ -21,7 +21,8 @@ public class Main {
                         BuildJavaPackageCommand.class,
                         UploadNewJavaVersionPackageCommand.class,
                         InstallAllJavaPackagesCommand.class,
-                        UploadJavaPackageCommand.class
+                        UploadJavaPackageCommand.class,
+                        RunJavaPackageCommand.class
                 }
         )
         class CliCommand implements Runnable {
