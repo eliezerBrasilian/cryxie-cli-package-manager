@@ -6,6 +6,7 @@ cryxie-cli-1.0-jar-with-dependencies.jar
 local_storage.lua
 cryxie-1.0.0
 cryxie_libs
+builds
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

@@ -39,11 +39,11 @@ public class JarGeneratorNewVersion {
     }
 
     private void compileJavaSources() throws IOException, InterruptedException {
-        // Comando para compilar os arquivos .java e gerar os .class em "build/classes"
+        // Comando para compilar os arquivos .java em "build/classes" com versão alvo Java 11
         String[] compileCommand = {
                 "powershell.exe", "-Command",
-                "Get-ChildItem -Path src -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
-                        "javac -d " + CLASSES_DIR + " -sourcepath src $(Get-Content sources.txt)"
+                "Get-ChildItem -Path src/main/java -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
+                        "javac --release 11 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
         };
 
         runCommand(compileCommand);

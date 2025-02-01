@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+@Deprecated
 public class JarGenerator {
     private File jarFile;
 

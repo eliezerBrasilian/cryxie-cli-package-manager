@@ -1,11 +1,10 @@
 package alpine.crixie.cli.commands;
 
 import alpine.crixie.cli.components.PackageLuaComponent;
+import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 @CommandLine.Command(
@@ -20,18 +19,7 @@ public class InitCommand implements Runnable {
     )
     private boolean skip;
 
-    @Override
-    public void run() {
-        if (skip) {
-            new PackageLuaComponent();
-        } else {
-            generateCustomLuaComponent();
-        }
-        createCryxieLibsDirectory();
-        System.out.println("Environment has been set up");
-    }
-
-    private static void createCryxieLibsDirectory(){
+    private static void createCryxieLibsDirectory() {
         String currentDir = System.getProperty("user.dir");
 
         var libsDirectory = new File(currentDir, "cryxie_libs");
@@ -54,7 +42,19 @@ public class InitCommand implements Runnable {
         System.out.print("Enter the url of your project repository : ");
         String repoUrl = scanner.nextLine();
 
-        new PackageLuaComponent(packageName,version,repoUrl,desc);
+        new PackageLuaComponent(packageName, version, repoUrl, desc);
+    }
+
+    @Override
+    public void run() {
+        if (skip) {
+            new PackageLuaComponent();
+        } else {
+            generateCustomLuaComponent();
+        }
+        createCryxieLibsDirectory();
+        new VSCodeSettingsManager();
+        System.out.println("Environment has been set up");
     }
 
 }

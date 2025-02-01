@@ -1,5 +1,6 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyDownloaderImpl;
 import picocli.CommandLine;
 
@@ -14,7 +15,7 @@ public class InstallPackageCommand implements Runnable {
 
     @Override
     public void run() {
-
+        new VSCodeSettingsManager();
         new DependencyDownloaderImpl(packageName).download();
     }
 
