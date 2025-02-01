@@ -41,7 +41,7 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
             }
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
         }
     }
 

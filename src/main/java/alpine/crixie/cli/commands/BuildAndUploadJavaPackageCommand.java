@@ -31,11 +31,11 @@ public class BuildAndUploadJavaPackageCommand implements Runnable {
             } else {
                 int statusCode = manager.sendPackage(packageRequestDto);
                 if (statusCode == 200) {
-                    System.out.println("package registered successfully");
+                    System.err.println("package registered successfully");
                 }
                 if (statusCode == 500) {
-                    System.out.println("Already exists a package with this name: " + packageRequestDto.name());
-                    System.out.println("If you want upload a new version use 'cryxie upload-new-version'");
+                    System.err.println("Already exists a package with this name: " + packageRequestDto.name());
+                    System.err.println("If you want upload a new version use 'cryxie upload-new-version'");
                 }
             }
 

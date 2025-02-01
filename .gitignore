@@ -2,6 +2,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+cryxie-cli-1.0-jar-with-dependencies.jar
+local_storage.lua
+cryxie-1.0.0
+cryxie_libs
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

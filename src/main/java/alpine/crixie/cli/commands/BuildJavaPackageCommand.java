@@ -14,6 +14,7 @@ public class BuildJavaPackageCommand implements Runnable {
     public void run() {
 
         try {
+            System.out.println("building package...");
             var generator = new JarGeneratorNewVersion();
             generator.generateJar();
             System.out.println("Package build completed successfully!");
