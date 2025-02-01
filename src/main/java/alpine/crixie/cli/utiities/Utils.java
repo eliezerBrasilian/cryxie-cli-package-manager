@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class Utils {
     public final static String BASE_URL = "http://localhost:4010/cryxie/api/v1";
+    public static final String LIB_PATH = "cryxie_libs";
+    public static final String SRC_PATH = "src/main/java";
 
     public static PackageRequestDto getPackageData() throws FileNotFoundException {
         var data = new PackageLuaModifier().getData();

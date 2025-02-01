@@ -18,10 +18,9 @@ public class BuildJavaPackageCommand implements Runnable {
             var generator = new JarGeneratorNewVersion();
             generator.generateJar();
             System.out.println("Package build completed successfully!");
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred during the build process.", e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+
+        } catch (IOException | RuntimeException | InterruptedException e) {
+            System.err.println("An error occurred during the build process.");
         }
     }
 }
