@@ -14,11 +14,12 @@ public class ProjectExecutor {
     private static final String BIN_PATH = "bin";
     // Obtém o separador correto para Windows (;) ou Linux/Mac (:)
     private final String PATH_SEPARATOR = System.getProperty("os.name").toLowerCase().contains("win") ? ";" : ":";
-    private String PACKAGE_NAME = "";
-    private final String MAIN_CLASS = PACKAGE_NAME;
+    private final String PACKAGE_NAME;
+    private final String MAIN_CLASS;
 
     public ProjectExecutor(PackageLuaModifier packageLuaModifier) throws FileNotFoundException {
         PACKAGE_NAME = packageLuaModifier.getData().directoryWhereMainFileIs();
+        MAIN_CLASS = PACKAGE_NAME;
     }
 
     public boolean compileProject() throws IOException, InterruptedException {
@@ -27,7 +28,7 @@ public class ProjectExecutor {
 
         // Comando para compilar o projeto
         String compileCommand = String.format(
-                "javac -cp \"%s/*\" -d %s %s/%s/*.java",
+                "javac -cp \"%s/*\" -d %s %s/%s.java",
                 LIB_PATH, BIN_PATH, SRC_PATH, PACKAGE_NAME.replace(".", "/")
         );
 
