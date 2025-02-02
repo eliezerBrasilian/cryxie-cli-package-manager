@@ -30,7 +30,11 @@ public class InitCommand implements Runnable {
 
     private static void generateCustomLuaComponent() {
         var scanner = new Scanner(System.in);
-        System.out.print("Enter the package name: ");
+
+        System.out.print("Enter the name of project (e.g., my_project): ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter the package name (e.g., com.example.project): ");
         String packageName = scanner.nextLine();
 
         System.out.print("Enter the description: ");
@@ -42,7 +46,7 @@ public class InitCommand implements Runnable {
         System.out.print("Enter the url of your project repository : ");
         String repoUrl = scanner.nextLine();
 
-        new PackageLuaComponent(packageName, version, repoUrl, desc);
+        new PackageLuaComponent(name, packageName, version, repoUrl, desc);
     }
 
     @Override

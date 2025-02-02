@@ -7,44 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class PackageLuaComponent {
+
     public PackageLuaComponent() {
-        _make("", "0.0.1", "", "", "N");
+        _make("", "", "0.0.1", "", "");
     }
 
     public PackageLuaComponent(
-            String packageName, String version, String repoUrl, String description, String generateProject) {
-        _make(packageName, version, repoUrl, description, generateProject);
+            String name, String packageName, String version, String repoUrl, String description) {
+        _make(name, packageName, version, repoUrl, description);
     }
 
-    public PackageLuaComponent(
-            String packageName, String version, String repoUrl, String description) {
-        _make(packageName, version, repoUrl, description, "N");
-    }
-
-    private void _make(String packageName,
-                       String version, String repoUrl,
-                       String description, String generateProject) {
-
-        generateLuaFile(packageName, version, repoUrl, description);
-        generateJavaProject(generateProject);
-    }
-
-    private void generateJavaProject(String generateProject) {
-        if (canGenerateJavaProject(generateProject)) {
-            new GenerateMainClass().generate((directory) -> {
-            });
-        }
-    }
-
-    private boolean canGenerateJavaProject(String generateProject) {
-        return !generateProject.isEmpty() && (generateProject.trim().equalsIgnoreCase("y") ||
-                generateProject.trim().equalsIgnoreCase("yes"));
-    }
-
-    private static void generateLuaFile(String packageName, String version, String repoUrl, String description) {
+    private static void generateLuaFile(String name, String packageName, String version, String repoUrl, String description) {
         String currentDir = System.getProperty("user.dir");
         File newFile = new File(currentDir, "package.lua");
-
 
         String content = """
                 ---
@@ -52,7 +27,7 @@ public class PackageLuaComponent {
                 ---
                 
                 Name = "%s"
-                DirectoryWhereMainFileIs = ""
+                DirectoryWhereMainFileIs = "%s"
                 Description = "%s"
                 Version = "%s"
                 
@@ -61,12 +36,25 @@ public class PackageLuaComponent {
                 Dependencies = {}
                 
                 Visibility = "public"
-                """.formatted(packageName, description, version, repoUrl);
+                """.formatted(name, packageName, description, version, repoUrl);
 
         try (var writer = new FileWriter(newFile)) {
             writer.write(content);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void _make(String name, String packageName,
+                       String version, String repoUrl,
+                       String description) {
+
+        generateLuaFile(name, packageName, version, repoUrl, description);
+        generateJavaProject();
+    }
+
+    private void generateJavaProject() {
+        new GenerateMainClass().generate((directory) -> {
+        });
     }
 }
