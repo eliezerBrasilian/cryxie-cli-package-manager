@@ -1,6 +1,7 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
-import alpine.crixie.cli.utiities.JarGenerator;
+import alpine.crixie.cli.utiities.JarGeneratorNewVersion;
+import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
@@ -18,8 +19,8 @@ public class UploadPackageImpl implements UploadPackageContract {
     }
 
     @Override
-    public void generateJar() throws IOException {
-        JarGenerator generator = new JarGenerator();
+    public void generateJar() throws IOException, InterruptedException {
+        var generator = new JarGeneratorNewVersion(new PackageLuaModifier());
         generator.generateJar();
         jarFile = generator.getJarFile();
     }
@@ -30,7 +31,7 @@ public class UploadPackageImpl implements UploadPackageContract {
 
     @Override
     public void obtainReadmePath() {
-        readmeFile = new File(System.getProperty("user.dir") + "/README.md");
+        readmeFile = new File(System.getProperty("user.dir").concat(File.separator) + "README.md");
     }
 
     @Override

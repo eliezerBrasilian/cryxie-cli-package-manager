@@ -18,13 +18,13 @@ public class Utils {
                 data.name(),
                 data.directoryWhereMainFileIs(),
                 data.description(),
-                true,
                 userId,
                 data.repositoryUrl(),
                 new ArrayList<>(),
                 data.version(),
                 data.deps(),
-                PackageRequestDto.Type.JAVA
+                PackageRequestDto.Type.JAVA,
+                PackageRequestDto.Visibility.PUBLIC
         );
     }
 

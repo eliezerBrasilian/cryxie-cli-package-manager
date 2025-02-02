@@ -1,7 +1,6 @@
 package alpine.crixie.cli.mocks;
 
 import alpine.crixie.cli.utiities.LocalStorage;
-import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
 import java.io.FileNotFoundException;
@@ -16,13 +15,13 @@ public class Mocks {
                 "pacote2",
                 "src.main.java.br.com.cryxie.Main",
                 "pacote 2 com pacote 1 como dependencia",
-                false,
                 userId,
                 "",
                 new ArrayList<>(),
                 "1.0.0",
                 List.of(new PackageRequestDto.Dependency("pacote1", "1.0.1")),
-                PackageRequestDto.Type.JAVA
+                PackageRequestDto.Type.JAVA,
+                PackageRequestDto.Visibility.PUBLIC
         );
     }
 
@@ -31,13 +30,13 @@ public class Mocks {
                 "pacote1",
                 "src.main.java.br.com.cryxie.Main",
                 "pacote 1 sem dependencias",
-                false,
                 userId,
                 "",
                 new ArrayList<>(),
                 "1.0.1",
                 List.of(),
-                PackageRequestDto.Type.JAVA
+                PackageRequestDto.Type.JAVA,
+                PackageRequestDto.Visibility.PUBLIC
         );
     }
 }

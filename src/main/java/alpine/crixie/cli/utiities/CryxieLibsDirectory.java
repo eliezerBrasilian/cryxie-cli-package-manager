@@ -34,7 +34,7 @@ public class CryxieLibsDirectory {
      * @throws RuntimeException      if the file exists but cannot be deleted.
      */
     public void remove() throws FileNotFoundException {
-        String jarFilePath = "cryxie_libs/" + jarName;
+        String jarFilePath = "cryxie_libs".concat(File.separator) + jarName;
         File jarFile = new File(jarFilePath);
 
         while (true) {
@@ -52,7 +52,7 @@ public class CryxieLibsDirectory {
                 }
             } catch (RuntimeException e) {
                 System.err.println("An error occurred while trying to delete the file: " + e.getMessage());
-                
+
                 try {
                     Thread.sleep(1000); // Aguarda 1 segundo antes de tentar novamente
                 } catch (InterruptedException ex) {

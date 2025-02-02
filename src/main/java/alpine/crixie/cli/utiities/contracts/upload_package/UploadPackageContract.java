@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.http.HttpResponse;
 
 public interface UploadPackageContract {
-    void generateJar() throws FileNotFoundException, IOException;
+    void generateJar() throws FileNotFoundException, IOException, InterruptedException;
 
     void obtainReadmePath();
 

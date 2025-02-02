@@ -8,13 +8,13 @@ public record PackageRequestDto(
         String name,
         @JsonProperty("project_structure") String projectStructure,
         String description,
-        @JsonProperty("is_private") boolean isPrivate,
         @JsonProperty("user_id") String userId,
         @JsonProperty("repository_url") String repositoryUrl,
         List<String> keywords,
         String version,
         List<Dependency> dependencies,
-        Type type
+        Type type,
+        Visibility visibility
 ) {
     public record Dependency(String name, String version) {
     }
@@ -23,4 +23,10 @@ public record PackageRequestDto(
         JAVA,
         LUA
     }
+
+    public enum Visibility {
+        PUBLIC,
+        PRIVATE
+    }
+
 }

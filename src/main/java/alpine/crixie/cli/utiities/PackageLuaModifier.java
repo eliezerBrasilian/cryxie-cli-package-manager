@@ -10,7 +10,9 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class PackageLuaModifier {
@@ -23,13 +25,13 @@ public class PackageLuaModifier {
     private String directoryWhereMainFileIs;
     private List<PackageRequestDto.Dependency> deps = new ArrayList<>();
     private static final String LUA_FILE_PATH = "package.lua";
+    private String visibility;
 
     public PackageLuaModifier() throws FileNotFoundException {
         File luaFile = new File(LUA_FILE_PATH);
         //System.out.println("Absolute path: " + luaFile.getAbsolutePath());
         if (!luaFile.exists()) {
             new PackageLuaComponent();
-            // throw new FileNotFoundException("file package.lua not found at " + LUA_FILE_PATH);
         }
         load();
     }
@@ -62,6 +64,7 @@ public class PackageLuaModifier {
             description = getLuaString("Description");
             version = getLuaString("Version");
             repositoryUrl = getLuaString("RepositoryUrl");
+            visibility = getLuaString("Visibility");
 
         } catch (Exception e) {
             throw new RuntimeException("Error loading Lua file", e);
@@ -120,38 +123,43 @@ public class PackageLuaModifier {
         return new File(LUA_FILE_PATH).getPath();
     }
 
-    private String getLuaFileContent() {
+    public String getLuaFileContent() {
         // Recupera o conteúdo atualizado do arquivo Lua
-        StringBuilder content = new StringBuilder();
+        String dependenciesContent = Arrays.stream(dependenciesTable.keys()).
+                map(key -> String.format("  [\"%s\"] = \"%s\",", key.tojstring(), dependenciesTable.get(key).tojstring()))
+                .collect(Collectors.joining("\n"));
 
-        content.append("-- Config related to your package\n\n");
-
-        content.append("Name = \"").append(name).append("\"\n");
-        content.append("DirectoryWhereMainFileIs = \"").append(directoryWhereMainFileIs).append("\"\n");
-        content.append("Description = \"").append(description).append("\"\n");
-        content.append("Version = \"").append(version).append("\"\n");
-        content.append("RepositoryUrl = \"").append(repositoryUrl).append("\"\n");
-        content.append("\n");
-        content.append("Dependencies = {\n");
-        for (LuaValue key : dependenciesTable.keys()) {
-            content.append("  [\"").append(key.tojstring()).append("\"] = \"")
-                    .append(dependenciesTable.get(key).tojstring()).append("\",\n");
-        }
-        content.append("}\n");
-
-        return content.toString();
-    }
-
-    public record PackageData(
-            String name, String version, String directoryWhereMainFileIs,
-            String description, String repositoryUrl,
-            List<PackageRequestDto.Dependency> deps) {
+        return """
+                -- Config related to your package
+                
+                Name = "%s"
+                DirectoryWhereMainFileIs = "%s"
+                Description = "%s"
+                Version = "%s"
+                RepositoryUrl = "%s"
+                
+                Dependencies = {
+                %s
+                }
+                
+                Visibility = "%s"
+                """.formatted(
+                name, directoryWhereMainFileIs, description, version, repositoryUrl, dependenciesContent, visibility
+        );
     }
 
     public PackageData getData() {
         return new PackageData(this.name, this.version, this.directoryWhereMainFileIs,
                 this.description,
-                this.repositoryUrl, deps);
+                this.repositoryUrl, deps,
+                PackageRequestDto.Visibility.valueOf(visibility.toUpperCase()));
+    }
+
+    public record PackageData(
+            String name, String version, String directoryWhereMainFileIs,
+            String description, String repositoryUrl,
+            List<PackageRequestDto.Dependency> deps,
+            PackageRequestDto.Visibility visibility) {
     }
 
 }

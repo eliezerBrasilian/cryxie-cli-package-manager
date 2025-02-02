@@ -1,6 +1,7 @@
 package alpine.crixie.cli.commands;
 
 import alpine.crixie.cli.utiities.JarGeneratorNewVersion;
+import alpine.crixie.cli.utiities.PackageLuaModifier;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class BuildJavaPackageCommand implements Runnable {
 
         try {
             System.out.println("building package...");
-            var generator = new JarGeneratorNewVersion();
+            var generator = new JarGeneratorNewVersion(new PackageLuaModifier());
             generator.generateJar();
             System.out.println("Package build completed successfully!");
 

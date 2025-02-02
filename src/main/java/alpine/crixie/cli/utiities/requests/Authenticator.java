@@ -31,11 +31,12 @@ public class Authenticator {
                 return;
             }
             System.out.println("please wait...");
+            input.close();
 
             String body = new JsonMapper<>()
                     .fromFields(Map.entry("email", email),
                             Map.entry("password", pass))
-                    .fieldsToJson();
+                    .toJson();
 
             var request = HttpRequest.newBuilder(new URI(Utils.BASE_URL + "/auth/login"))
                     .header("Content-Type", "application/json")

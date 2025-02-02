@@ -46,18 +46,25 @@ public class PackageLuaComponent {
         File newFile = new File(currentDir, "package.lua");
 
 
-        try (var writer = new FileWriter(newFile)) {
-            writer.write("---\n" +
-                    "--- Config related to your package\n" +
-                    "---\n\n" +
-                    "Name = \"" + packageName + "\"\n" +
-                    "DirectoryWhereMainFileIs = \"" + " " + "\"\n" +
-                    "Description = \"" + description + "\"\n" +
-                    "Version = \"" + version + "\"\n\n" +
-                    "RepositoryUrl = \"" + repoUrl + "\"\n\n" +
-                    "Dependencies = {}"
+        String content = """
+                ---
+                --- Config related to your package
+                ---
+                
+                Name = "%s"
+                DirectoryWhereMainFileIs = ""
+                Description = "%s"
+                Version = "%s"
+                
+                RepositoryUrl = "%s"
+                
+                Dependencies = {}
+                
+                Visibility = "public"
+                """.formatted(packageName, description, version, repoUrl);
 
-            );
+        try (var writer = new FileWriter(newFile)) {
+            writer.write(content);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

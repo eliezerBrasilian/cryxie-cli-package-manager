@@ -9,3 +9,5 @@ RepositoryUrl = ""
 Dependencies = {
     ["pacote1"] = "1.0.1",
 }
+
+Visibility = "public"

@@ -12,16 +12,20 @@ public class JarGeneratorNewVersion {
     private static final String CLASSES_DIR = BUILD_DIR + "/classes";
     private static final String MANIFEST_PATH = BUILD_DIR + "/META-INF/MANIFEST.MF";
     private File jarFile;
+    private PackageLuaModifier.PackageData packageMetaData;
+
+    public JarGeneratorNewVersion(PackageLuaModifier packageLuaModifier) {
+        packageMetaData = packageLuaModifier.getData();
+    }
 
     public void generateJar() throws IOException, InterruptedException {
-        var data = new PackageLuaModifier().getData();
-        String name = data.name();
-        String version = data.version();
-        String mainClass = data.directoryWhereMainFileIs();
+        String name = packageMetaData.name();
+        String version = packageMetaData.version();
+        String mainClass = packageMetaData.directoryWhereMainFileIs();
         String jarName = name + "@" + version + ".jar";
 
         // Define caminho final do JAR
-        jarFile = new File(BUILD_DIR + "/" + jarName);
+        jarFile = new File(BUILD_DIR + File.separator + jarName);
 
         // Garante que os diretórios necessários existam
         new File(BUILD_DIR).mkdirs();
@@ -50,7 +54,10 @@ public class JarGeneratorNewVersion {
     }
 
     private void generateManifest(String mainClass) throws IOException {
-        String manifestContent = "Manifest-Version: 1.0\n" +
+//        String manifestContent = "Manifest-Version: 1.0\n" +
+//                "Main-Class: " + mainClass + "\n";
+
+        String manifestContent = "Manifest-Version: ".concat(packageMetaData.version()).concat("\n") +
                 "Main-Class: " + mainClass + "\n";
 
         Files.write(Paths.get(MANIFEST_PATH), manifestContent.getBytes());
@@ -79,7 +86,7 @@ public class JarGeneratorNewVersion {
 
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new RuntimeException("Erro ao executar comando: " + String.join(" ", command));
+            throw new RuntimeException("Error on execute command: " + String.join(" ", command));
         }
     }
 

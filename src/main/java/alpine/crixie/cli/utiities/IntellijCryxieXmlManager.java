@@ -12,10 +12,15 @@ import java.io.IOException;
 public class IntellijCryxieXmlManager {
 
     public IntellijCryxieXmlManager() throws IOException {
-        createCryxieXml();
+        createCryxieLibsXml();
     }
 
-    public void createCryxieXml() throws IOException {
+    /**
+     * Creates a file called cryxie_libs.xml inside .idea/libraries
+     *
+     * @throws IOException if a runtime error occurs
+     */
+    public void createCryxieLibsXml() throws IOException {
         String dirPath = ".idea";
         String filePath = dirPath.concat(File.separator)
                 .concat("libraries").concat(File.separator)
@@ -30,8 +35,6 @@ public class IntellijCryxieXmlManager {
             createFileCryxie_libsXml(file);
         } else if (dir.exists() && !file.exists()) {
             createFileCryxie_libsXml(file);
-        } else {
-            System.out.println("Nenhuma ação foi realizada.");
         }
     }
 
@@ -82,7 +85,7 @@ public class IntellijCryxieXmlManager {
                     try {
                         outputStream.close();
                     } catch (IOException e) {
-                        System.err.println("Erro ao fechar o arquivo: " + e.getMessage());
+                        throw new IOException("Error on close file: " + e.getMessage());
                     }
                 }
             }
