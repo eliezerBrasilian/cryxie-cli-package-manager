@@ -1,6 +1,7 @@
 package alpine.crixie.cli.components;
 
-import br.com.cryxie.GenerateMainClass;
+
+import alpine.crixie.cli.utiities.MainClassGenerator;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,6 +22,7 @@ public class PackageLuaComponent {
         String currentDir = System.getProperty("user.dir");
         File newFile = new File(currentDir, "package.lua");
 
+
         String content = """
                 ---
                 --- Config related to your package
@@ -36,7 +38,7 @@ public class PackageLuaComponent {
                 Dependencies = {}
                 
                 Visibility = "public"
-                """.formatted(name, packageName, description, version, repoUrl);
+                """.formatted(name, packageName.concat(".Main"), description, version, repoUrl);
 
         try (var writer = new FileWriter(newFile)) {
             writer.write(content);
@@ -50,11 +52,12 @@ public class PackageLuaComponent {
                        String description) {
 
         generateLuaFile(name, packageName, version, repoUrl, description);
-        generateJavaProject();
+        generateJavaProject(packageName);
     }
 
-    private void generateJavaProject() {
-        new GenerateMainClass().generate((directory) -> {
-        });
+    private void generateJavaProject(String packageName) {
+        if (!packageName.isBlank()) {
+            new MainClassGenerator().generate(packageName);
+        }
     }
 }

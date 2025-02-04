@@ -9,7 +9,6 @@ public class MainClassGenerator {
 
     public void generate(String packageName) {
         generate(packageName, directory -> {
-            System.out.println("Directory structure created at: " + directory.getAbsolutePath());
         });
     }
 

@@ -47,7 +47,7 @@ public class JarGeneratorNewVersion {
         String[] compileCommand = {
                 "powershell.exe", "-Command",
                 "Get-ChildItem -Path src/main/java -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
-                        "javac --release 11 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
+                        "javac --release 15 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
         };
 
         runCommand(compileCommand);

@@ -28,5 +28,11 @@ public class VSCodeSettingsManagerTest {
         System.out.println(Visibility.valueOf(visibility_lower));
     }
 
+    @Test
+    public void stringIsBlackTest() {
+        String packageName = " ";
+
+        System.out.println(packageName.isBlank());
+    }
 
 }
