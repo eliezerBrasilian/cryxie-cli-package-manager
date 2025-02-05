@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Utils {
-    public final static String BASE_URL = "http://localhost:4010/cryxie/api/v1";
+    public final static String BASE_URL = "http://191.252.92.39:4010/cryxie/api/v1";
     public static final String LIB_PATH = "cryxie_libs";
     public static final String SRC_PATH = "src".concat(File.separator).concat("main").concat(File.separator).concat("java");
 
@@ -31,6 +31,10 @@ public class Utils {
 
     public static boolean isUnauthorized(int statusCode) {
         return statusCode == 403;
+    }
+
+    public static boolean AlreadyExistsPackageWithThisName(int statusCode) {
+        return statusCode == 500;
     }
 
     public static boolean status200_OK(int statusCode) {

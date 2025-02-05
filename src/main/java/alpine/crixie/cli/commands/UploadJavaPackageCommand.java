@@ -74,7 +74,8 @@ public class UploadJavaPackageCommand implements Runnable {
         var uploadPackageImpl = new UploadPackageImpl();
         uploadPackageImpl.linkJarFileToUpload(jarFile);
 
-        var response = uploadPackageImpl.sendPackage(getPackageData());
+        var packageRequestDto = getPackageData();
+        var response = uploadPackageImpl.sendPackage(packageRequestDto);
 
         int statusCode = response.statusCode();
 
@@ -82,11 +83,17 @@ public class UploadJavaPackageCommand implements Runnable {
             new Authenticator().login();
         } else if (Utils.status200_OK(statusCode)) {
             System.out.println("upload completed successfully");
+        } else if (statusCode == 404) {
+            System.err.print(response.body());
+
         } else {
+            System.err.println("Already exists a package with this name: " + packageRequestDto.name());
+            System.err.println("If you want upload a new version use 'cryxie upload-new-version'");
             String body = response.body();
 
             ErrorResponseDto mapped = new JsonMapper<ErrorResponseDto>()
                     .fromJsonToTargetClass(body, ErrorResponseDto.class);
+
 
             throw new RuntimeException(mapped.message());
         }

@@ -1,6 +1,7 @@
 package alpine.crixie.cli.commands;
 
 import alpine.crixie.cli.components.PackageLuaComponent;
+import alpine.crixie.cli.utiities.GitIgnoreGenerator;
 import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import picocli.CommandLine;
 
@@ -58,6 +59,7 @@ public class InitCommand implements Runnable {
         }
         createCryxieLibsDirectory();
         new VSCodeSettingsManager();
+        new GitIgnoreGenerator().generate();
         System.out.println("Environment has been set up");
     }
 

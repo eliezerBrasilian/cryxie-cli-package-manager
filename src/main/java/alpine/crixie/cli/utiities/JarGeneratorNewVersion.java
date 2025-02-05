@@ -52,14 +52,14 @@ public class JarGeneratorNewVersion {
             compileCommand = new String[]{
                     "powershell.exe", "-Command",
                     "Get-ChildItem -Path src/main/java -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
-                            "javac --release 15 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
+                            "javac --release 16 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
             };
         } else {
             // Comando para Linux (usando shell)
             compileCommand = new String[]{
                     "/bin/bash", "-c",
                     "find src/main/java -name '*.java' > sources.txt; " +
-                            "javac --release 15 -d " + CLASSES_DIR + " -sourcepath src/main/java @sources.txt"
+                            "javac --release 16 -d " + CLASSES_DIR + " -sourcepath src/main/java @sources.txt"
             };
         }
 

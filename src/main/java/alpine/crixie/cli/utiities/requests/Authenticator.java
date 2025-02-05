@@ -70,11 +70,11 @@ public class Authenticator {
                 new LocalStorage().updateData(
                         new LocalStorage.Data(mapped.token, mapped.profile_picture,
                                 mapped.name, mapped.user_id()));
-                System.out.println("Now you're logged in, try perform your operation again:)");
-                break;
+                throw new RuntimeException("Now you're logged in, try perform your operation again:)");
             case 500:
-                System.out.println("invalid credentials");
-                break;
+                throw new RuntimeException("invalid credentials");
+            case 404:
+                throw new RuntimeException("Login not found");
         }
 
     }

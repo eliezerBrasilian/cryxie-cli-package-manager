@@ -85,7 +85,8 @@ public abstract class JavaPackageInstallerBase {
             throw new RuntimeException("Error on downloading package " + packageName + ": " + response.body());
         }
 
-        record BytesAndDeps(@JsonProperty("jarBytes") String jarBytesEncoded, List<PackageRequestDto.Dependency> deps) {
+        record BytesAndDeps(@JsonProperty("jarBytes") String jarBytesEncoded, List<PackageRequestDto.Dependency> deps,
+                            String version) {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -93,16 +94,17 @@ public abstract class JavaPackageInstallerBase {
 
         String base64Encoded = responseMapped.jarBytesEncoded();
         var deps = responseMapped.deps();
+        var correctVersion = responseMapped.version();
 
         var bytes = Base64.getDecoder().decode(base64Encoded);
         validateJar(bytes);
 
-        defineOutputFilePathForPackage(packageName, version);
+        defineOutputFilePathForPackage(packageName, correctVersion);
 
         Files.createDirectories(Paths.get("cryxie_libs"));
         writeFileFromBytes(bytes);
 
-        addToPomXmlFile(packageName, version);
+        addToPomXmlFile(packageName, correctVersion);
 
         downloadedPackages.add(packageKey);
         return deps;

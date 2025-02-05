@@ -1,13 +1,14 @@
--- Config related to your package
+---
+--- Config related to your package
+---
 
-Name = "teste-abc-3"
-DirectoryWhereMainFileIs = "src.main.java.alpine.crixie.cli.Main"
+Name = "alfa"
+DirectoryWhereMainFileIs = "alpine.cryxie.cli.Main"
 Description = ""
-Version = "0.0.2"
+Version = "0.0.1"
+
 RepositoryUrl = ""
 
-Dependencies = {
-    ["pacote1"] = "1.0.1",
-}
+Dependencies = {}
 
 Visibility = "public"

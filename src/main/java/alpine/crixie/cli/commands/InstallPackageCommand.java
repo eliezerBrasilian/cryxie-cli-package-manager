@@ -1,5 +1,6 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.GitIgnoreGenerator;
 import alpine.crixie.cli.utiities.IntellijCryxieXmlManager;
 import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyDownloaderImpl;
@@ -21,6 +22,7 @@ public class InstallPackageCommand implements Runnable {
         try {
             new VSCodeSettingsManager();
             new IntellijCryxieXmlManager();
+            new GitIgnoreGenerator().generate();
             new DependencyDownloaderImpl(packageName).download();
         } catch (IOException e) {
             System.err.println(e.getMessage());

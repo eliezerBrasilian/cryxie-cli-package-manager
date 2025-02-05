@@ -1,5 +1,6 @@
 package alpine.crixie.cli.commands;
 
+import alpine.crixie.cli.utiities.GitIgnoreGenerator;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import alpine.crixie.cli.utiities.contracts.dependency_downloader.JavaAllPackagesInstaller;
@@ -17,6 +18,7 @@ public class InstallAllJavaPackagesCommand implements Runnable {
     public void run() {
         try {
             new VSCodeSettingsManager();
+            new GitIgnoreGenerator().generate();
 
             var deps = new PackageLuaModifier().getData().deps();
 
@@ -26,7 +28,7 @@ public class InstallAllJavaPackagesCommand implements Runnable {
             System.out.println("deps installed successfully");
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
         }
     }
 }
