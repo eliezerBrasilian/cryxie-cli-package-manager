@@ -21,7 +21,7 @@ public class BuildJavaPackageCommand implements Runnable {
             System.out.println("Package build completed successfully!");
 
         } catch (IOException | RuntimeException | InterruptedException e) {
-            System.err.println("An error occurred during the build process.");
+            System.err.println("An error occurred during the build process: " + e.getMessage());
         }
     }
 }

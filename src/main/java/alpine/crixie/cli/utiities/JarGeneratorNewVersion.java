@@ -9,8 +9,10 @@ import java.nio.file.Paths;
 
 public class JarGeneratorNewVersion {
     private static final String BUILD_DIR = "build";
-    private static final String CLASSES_DIR = BUILD_DIR + "/classes";
-    private static final String MANIFEST_PATH = BUILD_DIR + "/META-INF/MANIFEST.MF";
+    private static final String CLASSES_DIR = BUILD_DIR.concat(File.separator).concat("classes");
+    private static final String MANIFEST_PATH = BUILD_DIR.concat(File.separator).concat("META-INF")
+            .concat(File.separator).concat("MANIFEST.MF");
+
     private File jarFile;
     private PackageLuaModifier.PackageData packageMetaData;
 
@@ -30,7 +32,7 @@ public class JarGeneratorNewVersion {
         // Garante que os diretórios necessários existam
         new File(BUILD_DIR).mkdirs();
         new File(CLASSES_DIR).mkdirs();
-        new File(BUILD_DIR + "/META-INF").mkdirs();
+        new File(BUILD_DIR.concat(File.separator).concat("META-INF")).mkdirs();
 
         // 🔹 1. Compilar os arquivos Java para build/classes
         compileJavaSources();
@@ -43,20 +45,28 @@ public class JarGeneratorNewVersion {
     }
 
     private void compileJavaSources() throws IOException, InterruptedException {
-        // Comando para compilar os arquivos .java em "build/classes" com versão alvo Java 11
-        String[] compileCommand = {
-                "powershell.exe", "-Command",
-                "Get-ChildItem -Path src/main/java -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
-                        "javac --release 15 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
-        };
+        String[] compileCommand;
+
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            // Comando para Windows (usando PowerShell)
+            compileCommand = new String[]{
+                    "powershell.exe", "-Command",
+                    "Get-ChildItem -Path src/main/java -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
+                            "javac --release 15 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
+            };
+        } else {
+            // Comando para Linux (usando shell)
+            compileCommand = new String[]{
+                    "/bin/bash", "-c",
+                    "find src/main/java -name '*.java' > sources.txt; " +
+                            "javac --release 15 -d " + CLASSES_DIR + " -sourcepath src/main/java @sources.txt"
+            };
+        }
 
         runCommand(compileCommand);
     }
 
     private void generateManifest(String mainClass) throws IOException {
-//        String manifestContent = "Manifest-Version: 1.0\n" +
-//                "Main-Class: " + mainClass + "\n";
-
         String manifestContent = "Manifest-Version: ".concat(packageMetaData.version()).concat("\n") +
                 "Main-Class: " + mainClass + "\n";
 
@@ -94,4 +104,3 @@ public class JarGeneratorNewVersion {
         return jarFile;
     }
 }
-
