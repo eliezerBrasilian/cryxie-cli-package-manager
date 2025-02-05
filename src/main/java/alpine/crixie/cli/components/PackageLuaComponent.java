@@ -18,6 +18,15 @@ public class PackageLuaComponent {
         _make(name, packageName, version, repoUrl, description);
     }
 
+    private void _make(String name, String packageName,
+                       String version, String repoUrl,
+                       String description) {
+
+        generateLuaFile(name, packageName, version, repoUrl, description);
+        generateJavaProject(packageName);
+    }
+
+    
     private static void generateLuaFile(String name, String packageName, String version, String repoUrl, String description) {
         String currentDir = System.getProperty("user.dir");
         File newFile = new File(currentDir, "package.lua");
@@ -47,13 +56,6 @@ public class PackageLuaComponent {
         }
     }
 
-    private void _make(String name, String packageName,
-                       String version, String repoUrl,
-                       String description) {
-
-        generateLuaFile(name, packageName, version, repoUrl, description);
-        generateJavaProject(packageName);
-    }
 
     private void generateJavaProject(String packageName) {
         if (!packageName.isBlank()) {
