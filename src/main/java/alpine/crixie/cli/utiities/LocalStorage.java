@@ -1,5 +1,6 @@
 package alpine.crixie.cli.utiities;
 
+import alpine.crixie.cli.components.InitialDataComponent;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaValue;
@@ -16,28 +17,29 @@ public class LocalStorage {
     private String userId;
 
     private final String FILE_NAME = "local_storage.lua";
+    private final InitialDataComponent initialDataComponent = new InitialDataComponent();
 
     public LocalStorage() {
         File luaFile = new File(FILE_NAME);
         if (!luaFile.exists()) {
-            String currentDir = System.getProperty("user.dir");
-            File newFile = new File(currentDir, FILE_NAME);
-
-            try (var writer = new FileWriter(newFile)) {
-                writer.write(
-                        """
-                                Token = ""
-                                Name = ""
-                                ProfilePicture = ""
-                                UserId = ""
-                                """
-                );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            createFileIfNotExists();
         } else {
             load();
         }
+    }
+
+    private void createFileIfNotExists() {
+        String currentDir = System.getProperty("user.dir");
+        File newFile = new File(currentDir, FILE_NAME);
+
+        try (var writer = new FileWriter(newFile)) {
+            writer.write(
+                    initialDataComponent.localStorageComponent()
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void load() throws RuntimeException {
@@ -83,11 +85,16 @@ public class LocalStorage {
     }
 
     private void saveChangesAtLuaFile() {
+        File luaFile = new File(FILE_NAME);
+
+        if (!luaFile.exists()) {
+            createFileIfNotExists();
+        }
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(getLuaFilePath()), StandardCharsets.UTF_8))) {
             writer.write(content());
         } catch (IOException e) {
-            throw new RuntimeException("Error on save data at local storage", e);
+            throw new RuntimeException("Error on save data at local storage: " + e.getMessage());
         }
     }
 
@@ -102,12 +109,18 @@ public class LocalStorage {
                 "UserId = \"" + userId + "\"\n";
     }
 
-    public record Data(String token, String profilePicture, String name, String userId) {
-    }
-
     public Data getData() {
         var decoder = new Base64Decoder();
+        if (userId == null) {
+            return new Data();
+        }
         return new Data(token, decoder.decode(profilePicture), decoder.decode(name), decoder.decode(userId));
+    }
+
+    public record Data(String token, String profilePicture, String name, String userId) {
+        public Data() {
+            this("", "", "", "");
+        }
     }
 }
 

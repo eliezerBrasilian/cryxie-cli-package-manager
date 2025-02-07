@@ -23,8 +23,6 @@ public class Authenticator {
         try {
             int x = -1;
             if (x == 10) {
-
-
                 Scanner input = new Scanner(System.in);
 
                 System.out.print("Please enter your email: ");
@@ -66,10 +64,11 @@ public class Authenticator {
 
         if (Utils.StatusCode.fromCode(response.statusCode()) == Utils.StatusCode.OK) {
             saveToken(response.body());
+        } else {
+            var responseMapped = new JsonMapper<BaseResponse<Object>>().fromJsonToTargetClass(responseJson, new TypeReference<>() {
+            });
+            throw new RuntimeException(responseMapped.message());
         }
-        var responseMapped = new JsonMapper<BaseResponse<Object>>().fromJsonToTargetClass(responseJson, new TypeReference<>() {
-        });
-        throw new RuntimeException(responseMapped.message());
     }
 
     private void saveToken(String body

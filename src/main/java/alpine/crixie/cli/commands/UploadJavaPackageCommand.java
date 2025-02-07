@@ -68,11 +68,13 @@ public class UploadJavaPackageCommand implements Runnable {
     private void uploadFile(Path file) throws IOException, InterruptedException {
         System.out.printf("Uploading %s to Cryxie repositories...%n", file.getFileName());
 
+        int x = 2;
         File jarFile = file.toFile();
         var uploadPackageImpl = new UploadPackageImpl();
         uploadPackageImpl.linkJarFileToUpload(jarFile);
 
         var packageRequestDto = getPackageData();
+        int y = 10;
         var response = uploadPackageImpl.sendPackage(packageRequestDto);
         int statusCode = response.statusCode();
 
