@@ -50,7 +50,7 @@ public class ProjectExecutor {
         StringBuilder classpath = new StringBuilder();
         for (File file : libDir.listFiles()) {
             if (file.getName().endsWith(".jar")) {
-                if (classpath.length() > 0) {
+                if (!classpath.isEmpty()) {
                     classpath.append(PATH_SEPARATOR);
                 }
                 classpath.append(file.getAbsolutePath());

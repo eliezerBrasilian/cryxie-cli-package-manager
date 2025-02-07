@@ -1,10 +1,8 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.Utils;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
 import alpine.crixie.cli.utiities.requests.Authenticator;
-import alpine.crixie.cli.utiities.requests.dtos.ErrorResponseDto;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -76,12 +74,14 @@ public class UploadJavaPackageCommand implements Runnable {
 
         var packageRequestDto = getPackageData();
         var response = uploadPackageImpl.sendPackage(packageRequestDto);
-
         int statusCode = response.statusCode();
 
-        if (Utils.isUnauthorized(statusCode)) {
+        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
             new Authenticator().login();
-        } else if (Utils.status200_OK(statusCode)) {
+        }
+
+        /*
+        else if (Utils.status200_OK(statusCode)) {
             System.out.println("upload completed successfully");
         } else if (statusCode == 404) {
             System.err.print(response.body());
@@ -97,6 +97,8 @@ public class UploadJavaPackageCommand implements Runnable {
 
             throw new RuntimeException(mapped.message());
         }
+
+         */
 
     }
 

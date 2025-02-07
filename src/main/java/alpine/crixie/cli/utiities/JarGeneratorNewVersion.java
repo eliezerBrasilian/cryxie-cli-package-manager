@@ -14,7 +14,7 @@ public class JarGeneratorNewVersion {
             .concat(File.separator).concat("MANIFEST.MF");
 
     private File jarFile;
-    private PackageLuaModifier.PackageData packageMetaData;
+    private final PackageLuaModifier.PackageData packageMetaData;
 
     public JarGeneratorNewVersion(PackageLuaModifier packageLuaModifier) {
         packageMetaData = packageLuaModifier.getData();

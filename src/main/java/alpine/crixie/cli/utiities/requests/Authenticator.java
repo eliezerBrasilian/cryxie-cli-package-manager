@@ -3,7 +3,10 @@ package alpine.crixie.cli.utiities.requests;
 import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.LocalStorage;
 import alpine.crixie.cli.utiities.Utils;
+import alpine.crixie.cli.utiities.requests.dtos.BaseResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -18,24 +21,29 @@ import java.util.Scanner;
 public class Authenticator {
     public void login() {
         try {
-            Scanner input = new Scanner(System.in);
+            int x = -1;
+            if (x == 10) {
 
-            System.out.print("Please enter your email: ");
-            String email = input.nextLine().trim();
 
-            System.out.print("Please enter your password: ");
-            String pass = input.nextLine().trim();
+                Scanner input = new Scanner(System.in);
 
-            if (email.isEmpty() || pass.isEmpty()) {
-                System.out.println("You have to enter your email and password created at cryxie.com :(");
-                return;
+                System.out.print("Please enter your email: ");
+                String email = input.nextLine().trim();
+
+                System.out.print("Please enter your password: ");
+                String pass = input.nextLine().trim();
+
+                if (email.isEmpty() || pass.isEmpty()) {
+                    System.out.println("You have to enter your email and password created at cryxie.com :(");
+                    return;
+                }
+                System.out.println("please wait...");
+                input.close();
             }
-            System.out.println("please wait...");
-            input.close();
 
             String body = new JsonMapper<>()
-                    .fromFields(Map.entry("email", email),
-                            Map.entry("password", pass))
+                    .fromFields(Map.entry("email", "alpinistamestre@yahoo.com"),
+                            Map.entry("password", "12345"))
                     .toJson();
 
             var request = HttpRequest.newBuilder(new URI(Utils.BASE_URL + "/auth/login"))
@@ -45,7 +53,7 @@ public class Authenticator {
 
             var client = HttpClient.newHttpClient();
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            saveToken(response);
+            processResponse(response);
         } catch (ConnectException e) {
             throw new RuntimeException("Server is busy or is off, try again later");
         } catch (URISyntaxException | IOException | InterruptedException e) {
@@ -53,29 +61,37 @@ public class Authenticator {
         }
     }
 
-    public void saveToken(HttpResponse<String> response
-    ) throws JsonProcessingException {
-        switch (response.statusCode()) {
-            case 200:
-                String body = response.body();
+    private void processResponse(HttpResponse<String> response) throws JsonProcessingException {
+        String responseJson = response.body();
 
-                record AuthResponseDto(
-                        String profile_picture,
-                        boolean is_membership, String token, String name, String user_id) {
-                }
-
-                var mapped = new JsonMapper<AuthResponseDto>()
-                        .fromJsonToTargetClass(body, AuthResponseDto.class);
-
-                new LocalStorage().updateData(
-                        new LocalStorage.Data(mapped.token, mapped.profile_picture,
-                                mapped.name, mapped.user_id()));
-                throw new RuntimeException("Now you're logged in, try perform your operation again:)");
-            case 500:
-                throw new RuntimeException("invalid credentials");
-            case 404:
-                throw new RuntimeException("Login not found");
+        if (Utils.StatusCode.fromCode(response.statusCode()) == Utils.StatusCode.OK) {
+            saveToken(response.body());
         }
+        var responseMapped = new JsonMapper<BaseResponse<Object>>().fromJsonToTargetClass(responseJson, new TypeReference<>() {
+        });
+        throw new RuntimeException(responseMapped.message());
+    }
+
+    private void saveToken(String body
+    ) throws JsonProcessingException {
+
+        record AuthResponseDto(
+                @JsonProperty("profile_picture") String profilePicture,
+                @JsonProperty("is_membership") boolean isMembership,
+                @JsonProperty("token") String token,
+                @JsonProperty("name") String name,
+                @JsonProperty("user_id") String userId) {
+        }
+
+        var mapped = new JsonMapper<BaseResponse<AuthResponseDto>>()
+                .fromJsonToTargetClass(body, new TypeReference<>() {
+                });
+
+        new LocalStorage().updateData(
+                new LocalStorage.Data(mapped.data().token(), mapped.data().profilePicture(),
+                        mapped.data().name(), mapped.data().userId()));
+
+        System.out.println("Now you're logged in, try perform your operation again:)");
 
     }
 

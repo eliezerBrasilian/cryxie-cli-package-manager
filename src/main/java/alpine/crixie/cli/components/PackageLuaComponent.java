@@ -25,12 +25,10 @@ public class PackageLuaComponent {
         generateLuaFile(name, packageName, version, repoUrl, description);
         generateJavaProject(packageName);
     }
-
     
     private static void generateLuaFile(String name, String packageName, String version, String repoUrl, String description) {
         String currentDir = System.getProperty("user.dir");
         File newFile = new File(currentDir, "package.lua");
-
 
         String content = """
                 ---
@@ -47,7 +45,9 @@ public class PackageLuaComponent {
                 Dependencies = {}
                 
                 Visibility = "public"
-                """.formatted(name, packageName.concat(".Main"), description, version, repoUrl);
+                """.formatted(name, packageName.concat(".Main"), description,
+                version.isBlank() ? "0.0.1" : version,
+                repoUrl);
 
         try (var writer = new FileWriter(newFile)) {
             writer.write(content);
