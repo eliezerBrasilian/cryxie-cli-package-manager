@@ -16,7 +16,7 @@ public class UploadPackageManager {
         this.uploadPackageContract = uploadPackageContract;
     }
 
-    public int sendPackage(PackageRequestDto packageRequestDto) {
+    public void sendPackage(PackageRequestDto packageRequestDto) {
         try {
             System.out.println("starting building project");
             uploadPackageContract.generateJar();
@@ -25,7 +25,7 @@ public class UploadPackageManager {
             uploadPackageContract.obtainReadmePath();
 
             System.out.println("readme file was obtained");
-            return uploadPackageContract.sendPackage(packageRequestDto).statusCode();
+            uploadPackageContract.sendPackage(packageRequestDto);
         } catch (ConnectException e) {
             throw new RuntimeException("can't send package looks like server is busy or off");
         } catch (IOException | InterruptedException e) {

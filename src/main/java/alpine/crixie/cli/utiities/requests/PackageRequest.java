@@ -2,8 +2,12 @@ package alpine.crixie.cli.utiities.requests;
 
 import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.LocalStorage;
+import alpine.crixie.cli.utiities.Utils;
+import alpine.crixie.cli.utiities.requests.dtos.BaseResponse;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +28,8 @@ import static alpine.crixie.cli.utiities.Utils.BASE_URL;
 public class PackageRequest {
     final private String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
 
-    public HttpResponse<String> send(PackageRequestDto packageRequestDto,
-                                     File readmeFile, File jarFile) throws IOException, InterruptedException {
+    public void send(PackageRequestDto packageRequestDto,
+                     File readmeFile, File jarFile) throws IOException, InterruptedException {
         String packageJson = new JsonMapper<>(packageRequestDto).toJson();
 
         String bearerToken = new LocalStorage().getData().token();
@@ -40,9 +44,27 @@ public class PackageRequest {
                 .build();
 
         try {
-            return client.send(request, HttpResponse.BodyHandlers.ofString());
+            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            processResponse(response);
+
         } catch (ConnectException e) {
             throw new RuntimeException("Error on uploading package, looks like the server is busy or off :(");
+        }
+    }
+
+    private void processResponse(HttpResponse<String> response) throws JsonProcessingException {
+        int statusCode = response.statusCode();
+
+        var mappedResponse = new JsonMapper<BaseResponse<String>>()
+                .fromJsonToTargetClass(response.body(), new TypeReference<>() {
+                });
+
+        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
+            new Authenticator().login();
+        } else if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)) {
+            System.out.println(mappedResponse.data());
+        } else {
+            System.err.println(mappedResponse.data());
         }
     }
 

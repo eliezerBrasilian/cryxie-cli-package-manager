@@ -8,7 +8,6 @@ import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 public class UploadPackageImpl implements UploadPackageContract {
     private File jarFile;
@@ -35,7 +34,7 @@ public class UploadPackageImpl implements UploadPackageContract {
     }
 
     @Override
-    public HttpResponse<String> sendPackage(PackageRequestDto packageRequestDto) throws IOException, InterruptedException {
+    public void sendPackage(PackageRequestDto packageRequestDto) throws IOException, InterruptedException {
         if (!readmeFile.exists()) {
             throw new FileNotFoundException("The README.md file was not found in the root directory.");
         }
@@ -43,6 +42,6 @@ public class UploadPackageImpl implements UploadPackageContract {
             throw new FileNotFoundException("The file with .jar extension was not found in the build folder.");
         }
 
-        return new PackageRequest().send(packageRequestDto, readmeFile, jarFile);
+        new PackageRequest().send(packageRequestDto, readmeFile, jarFile);
     }
 }

@@ -1,8 +1,6 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.Utils;
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
-import alpine.crixie.cli.utiities.requests.Authenticator;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -68,42 +66,13 @@ public class UploadJavaPackageCommand implements Runnable {
     private void uploadFile(Path file) throws IOException, InterruptedException {
         System.out.printf("Uploading %s to Cryxie repositories...%n", file.getFileName());
 
-        int x = 2;
         File jarFile = file.toFile();
         var uploadPackageImpl = new UploadPackageImpl();
         uploadPackageImpl.linkJarFileToUpload(jarFile);
 
         var packageRequestDto = getPackageData();
-        int y = 10;
-        var response = uploadPackageImpl.sendPackage(packageRequestDto);
-        int statusCode = response.statusCode();
 
-        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
-            new Authenticator().login();
-        }
-
-        /*
-        else if (Utils.status200_OK(statusCode)) {
-            System.out.println("upload completed successfully");
-        } else if (statusCode == 404) {
-            System.err.print(response.body());
-
-        } else {
-            System.err.println("Already exists a package with this name: " + packageRequestDto.name());
-            System.err.println("If you want upload a new version use 'cryxie upload-new-version'");
-            String body = response.body();
-
-            ErrorResponseDto mapped = new JsonMapper<ErrorResponseDto>()
-                    .fromJsonToTargetClass(body, ErrorResponseDto.class);
-
-
-            throw new RuntimeException(mapped.message());
-        }
-
-         */
-
+        uploadPackageImpl.sendPackage(packageRequestDto);
     }
-
-
 }
 

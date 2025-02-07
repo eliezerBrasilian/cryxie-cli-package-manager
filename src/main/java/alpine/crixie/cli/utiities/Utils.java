@@ -56,17 +56,4 @@ public class Utils {
             throw new IllegalArgumentException("Unrecognized status code: " + code);
         }
     }
-
-    public static boolean isUnauthorized(int statusCode) {
-        return statusCode == 403;
-    }
-
-    public static boolean AlreadyExistsPackageWithThisName(int statusCode) {
-        return statusCode == 500;
-    }
-
-    public static boolean status200_OK(int statusCode) {
-        return statusCode == 200;
-    }
-
 }
