@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class PackageLuaModifier {
     private Globals globals;
     private LuaTable dependenciesTable;
@@ -162,5 +161,10 @@ public class PackageLuaModifier {
             PackageRequestDto.Visibility visibility) {
     }
 
+    public String generateNameForBuiltPackage() {
+        String name = getData().name();
+        String version = getData().version();
+        return name + "@" + version + ".jar";
+    }
 }
 

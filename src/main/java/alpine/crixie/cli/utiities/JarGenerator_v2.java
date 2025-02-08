@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class JarGeneratorNewVersion {
+public class JarGenerator_v2 {
     private static final String BUILD_DIR = "build";
     private static final String CLASSES_DIR = BUILD_DIR.concat(File.separator).concat("classes");
     private static final String MANIFEST_PATH = BUILD_DIR.concat(File.separator).concat("META-INF")
@@ -16,7 +16,7 @@ public class JarGeneratorNewVersion {
     private File jarFile;
     private final PackageLuaModifier.PackageData packageMetaData;
 
-    public JarGeneratorNewVersion(PackageLuaModifier packageLuaModifier) {
+    public JarGenerator_v2(PackageLuaModifier packageLuaModifier) {
         packageMetaData = packageLuaModifier.getData();
     }
 

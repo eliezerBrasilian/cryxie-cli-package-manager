@@ -1,6 +1,6 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
-import alpine.crixie.cli.utiities.JarGeneratorNewVersion;
+import alpine.crixie.cli.utiities.JarGenerator_v2;
 import alpine.crixie.cli.utiities.PackageLuaModifier;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
@@ -39,7 +39,7 @@ public class UploadPackageManager {
         try {
             System.out.println("starting building project");
 
-            JarGeneratorNewVersion generator = new JarGeneratorNewVersion(new PackageLuaModifier());
+            JarGenerator_v2 generator = new JarGenerator_v2(new PackageLuaModifier());
             generator.generateJar();
 
             System.out.println("jar was generated successfully");
