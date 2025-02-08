@@ -1,9 +1,7 @@
 package alpine.crixie.cli.commands;
 
-import alpine.crixie.cli.utiities.GitIgnoreGenerator;
-import alpine.crixie.cli.utiities.IntellijCryxieXmlManager;
-import alpine.crixie.cli.utiities.VSCodeSettingsManager;
-import alpine.crixie.cli.utiities.contracts.dependency_downloader.DependencyDownloaderImpl;
+import alpine.crixie.cli.utiities.SearchArrumer;
+import alpine.crixie.cli.utiities.contracts.DependencyManager;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -20,11 +18,8 @@ public class InstallPackageCommand implements Runnable {
     @Override
     public void run() {
         try {
-            int x = 2;
-            new VSCodeSettingsManager();
-            new IntellijCryxieXmlManager();
-            new GitIgnoreGenerator().generate();
-            new DependencyDownloaderImpl(packageName).download();
+            var manager = new DependencyManager(new SearchArrumer(packageName));
+            manager.installDependencyFromPrompt();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

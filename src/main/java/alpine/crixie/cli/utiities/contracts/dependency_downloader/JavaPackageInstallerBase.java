@@ -2,6 +2,7 @@ package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
 import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.PomXmlModifier;
+import alpine.crixie.cli.utiities.contracts.dependency_installer.DependencyInstallerContract;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.BaseResponse;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
@@ -18,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
-public abstract class JavaPackageInstallerBase {
+public abstract class JavaPackageInstallerBase implements DependencyInstallerContract {
     protected final String name;
     protected String version = "latest";
     protected String outputFilePath;
@@ -35,6 +36,7 @@ public abstract class JavaPackageInstallerBase {
         defineOutputFilePathForPackage(name, version);
     }
 
+    @Override
     public void download() {
         Set<String> downloadedPackages = new HashSet<>();
         try {

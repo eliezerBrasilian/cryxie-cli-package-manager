@@ -23,6 +23,7 @@ public class UploadJavaPackageCommand implements Runnable {
     public void run() {
         try {
             Path buildDir = Paths.get("build");
+
             List<Path> jarFiles = Files.walk(buildDir)
                     .filter(path -> path.toString().endsWith(".jar"))
                     .toList();

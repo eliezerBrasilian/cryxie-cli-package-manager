@@ -8,7 +8,6 @@ public class Main {
 
         @CommandLine.Command(
                 name = "cryxie", //bat file
-                //name = "teste",
                 description = "Crixie CLI - User Friendly Java Package Manager",
                 mixinStandardHelpOptions = true,
                 version = "1.0.0",
