@@ -24,33 +24,40 @@ public class PromptPackageDownloader extends JavaPackageInstallerBase {
     protected void downloadPackageRecursively(String packageName, String version, Set<String> downloadedPackages)
             throws IOException, InterruptedException {
 
-        var deps = performCommonOperationsAndGetDependencies(
+        var data = performCommonOperationsAndGetDependencies(
                 packageName, version, downloadedPackages);
 
-        if (deps == null) return;
+        var childDeps = data.childDeps();
+        var correctVersion = data.correctVersion();
 
-        addBaseDependencyInPackageLua(packageName, version, deps);
+        if (childDeps == null) return;
 
-        if (!deps.isEmpty()) {
-            for (PackageRequestDto.Dependency dependency : deps) {
+        addBaseDependencyInPackageLua(packageName, correctVersion, childDeps);
+
+        if (!childDeps.isEmpty()) {
+            for (PackageRequestDto.Dependency dependency : childDeps) {
                 downloadPackageRecursively(dependency.name(), dependency.version(), downloadedPackages);
             }
         }
     }
 
-    private void addBaseDependencyInPackageLua(String packageName, String version, List<PackageRequestDto.Dependency> deps) {
-        if (deps.size() == 1) {
-            addToPackageLuaFile(packageName, version);
+    private void addBaseDependencyInPackageLua(String currentPackageName, String correctVersion, List<PackageRequestDto.Dependency> childDeps) {
+
+        //se possui n filhos, não adiciona eles, adiciona só o pai
+        if (childDeps.size() > 1) {
+            addToPackageLuaFile(this.name, correctVersion);
+        } else {
+            addToPackageLuaFile(currentPackageName, correctVersion);
         }
     }
 
-    private void addToPackageLuaFile(String packageName, String version) {
+    private void addToPackageLuaFile(String packageName, String correctVersion) {
         try {
             PackageLuaModifier modifier = new PackageLuaModifier();
-            modifier.addDependency(packageName, version);
+            modifier.addDependency(packageName, correctVersion);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("was not possible to add dependency into package.lua");
+            throw new RuntimeException("was not possible to add dependency into package.lua, because file does not exist: " + e.getMessage());
         }
     }
-    
+
 }

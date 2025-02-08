@@ -17,13 +17,15 @@ public class JavaAllPackagesInstaller extends JavaPackageInstallerBase {
                                               String version, Set<String> downloadedPackages)
             throws IOException, InterruptedException {
 
-        var deps = performCommonOperationsAndGetDependencies(
+        var data = performCommonOperationsAndGetDependencies(
                 packageName, version, downloadedPackages);
 
-        if (deps == null) return;
+        var childDeps = data.childDeps();
 
-        if (!deps.isEmpty()) {
-            for (PackageRequestDto.Dependency dependency : deps) {
+        if (childDeps == null) return;
+
+        if (!childDeps.isEmpty()) {
+            for (PackageRequestDto.Dependency dependency : childDeps) {
                 downloadPackageRecursively(dependency.name(), dependency.version(), downloadedPackages);
             }
         }

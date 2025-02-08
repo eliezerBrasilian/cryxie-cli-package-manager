@@ -1,10 +1,12 @@
 package alpine.crixie.cli.utiities.contracts.dependency_downloader;
 
+import alpine.crixie.cli.utiities.JsonMapper;
 import alpine.crixie.cli.utiities.PomXmlModifier;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
+import alpine.crixie.cli.utiities.requests.dtos.BaseResponse;
 import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -17,8 +19,8 @@ import java.util.*;
 import java.util.zip.ZipInputStream;
 
 public abstract class JavaPackageInstallerBase {
-    private final String name;
-    private String version = "latest";
+    protected final String name;
+    protected String version = "latest";
     protected String outputFilePath;
     protected final PackageRequest packageRequest = new PackageRequest();
 
@@ -47,7 +49,7 @@ public abstract class JavaPackageInstallerBase {
             String packageName, String version, Set<String> downloadedPackages)
             throws IOException, InterruptedException;
 
-    protected List<PackageRequestDto.Dependency> performCommonOperationsAndGetDependencies(
+    protected Data performCommonOperationsAndGetDependencies(
             String packageName, String version, Set<String> downloadedPackages) throws IOException, InterruptedException {
         String packageKey = packageName + "@" + version;
 
@@ -89,12 +91,13 @@ public abstract class JavaPackageInstallerBase {
                             String version) {
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        var responseMapped = objectMapper.readValue(response.body(), BytesAndDeps.class);
+        var responseMapped = new JsonMapper<BaseResponse<BytesAndDeps>>().fromJsonToTargetClass(response.body(), new TypeReference<>() {
+        });
+        var data = responseMapped.data();
 
-        String base64Encoded = responseMapped.jarBytesEncoded();
-        var deps = responseMapped.deps();
-        var correctVersion = responseMapped.version();
+        String base64Encoded = data.jarBytesEncoded();
+        List<PackageRequestDto.Dependency> deps = responseMapped.data().deps();
+        var correctVersion = responseMapped.data().version();
 
         var bytes = Base64.getDecoder().decode(base64Encoded);
         validateJar(bytes);
@@ -107,7 +110,10 @@ public abstract class JavaPackageInstallerBase {
         addToPomXmlFile(packageName, correctVersion);
 
         downloadedPackages.add(packageKey);
-        return deps;
+        return new Data(correctVersion, deps);
+    }
+
+    public record Data(String correctVersion, List<PackageRequestDto.Dependency> childDeps) {
     }
 
     private boolean packageIsAlreadyInstalled(String packageKey, Set<String> downloadedPackages) {

@@ -20,6 +20,7 @@ public class InstallPackageCommand implements Runnable {
     @Override
     public void run() {
         try {
+            int x = 2;
             new VSCodeSettingsManager();
             new IntellijCryxieXmlManager();
             new GitIgnoreGenerator().generate();

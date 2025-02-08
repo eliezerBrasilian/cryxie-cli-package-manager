@@ -16,7 +16,7 @@ public class Main {
                         InstallPackageCommand.class,
                         InitCommand.class,
                         CommandLine.HelpCommand.class,
-                        UninstallCommand.class,
+                        UninstallJavaPackageCommand.class,
                         BuildJavaPackageCommand.class,
                         UploadNewJavaVersionPackageCommand.class,
                         InstallAllJavaPackagesCommand.class,

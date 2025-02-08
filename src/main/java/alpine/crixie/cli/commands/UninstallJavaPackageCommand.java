@@ -7,9 +7,9 @@ import java.io.FileNotFoundException;
 
 @CommandLine.Command(
         name = "uninstall",
-        description = "Uninstall a specified package."
+        description = "Uninstall a specified java package."
 )
-public class UninstallCommand implements Runnable {
+public class UninstallJavaPackageCommand implements Runnable {
 
     @CommandLine.Parameters(paramLabel = "<packageName@version>", description = "Name and optional version of the package to be uninstalled. Format: pacote[@version].")
     private String packageName;

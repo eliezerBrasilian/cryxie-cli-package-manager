@@ -41,13 +41,13 @@ public class CryxieLibsDirectory {
             try {
                 if (jarFile.exists()) {
                     if (jarFile.delete()) {
-                        System.out.println("File " + jarName + " was successfully deleted.");
+                        System.out.println("File " + jarName + " was successfully uninstalled.");
                         break;
                     } else {
                         throw new RuntimeException("Could not delete file (try again): " + jarName);
                     }
                 } else {
-                    System.out.println("File " + jarName + " does not exist.");
+                    System.out.println("Package " + jarName + " does not exist.");
                     break;
                 }
             } catch (RuntimeException e) {

@@ -41,25 +41,40 @@ public class PomXmlModifier {
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(pomFile);
-
-            // Obtém o elemento raiz
             Element projectElement = document.getRootElement();
-
             Element dependenciesElement = getDependenciesTag(projectElement);
-            // Adiciona uma quebra de linha antes, se necessário
-            dependenciesElement.addContent("\n    ");
 
-            // Adiciona a dependência à lista de dependências
-            dependenciesElement.addContent(addNewDependency(projectElement, name, jarFilePath));
+            if (!dependencyExists(dependenciesElement, name, version)) {
+                // Adiciona uma quebra de linha antes, se necessário
+                dependenciesElement.addContent("\n    ");
 
-            // Adiciona uma quebra de linha após a dependência
-            dependenciesElement.addContent("\n");
+                // Adiciona a dependência à lista de dependências
+                dependenciesElement.addContent(addNewDependency(projectElement, name, jarFilePath));
 
-            saveModifications(document);
-
+                // Adiciona uma quebra de linha após a dependência
+                dependenciesElement.addContent("\n");
+                saveModifications(document);
+            }
+            
         } catch (Exception e) {
-            throw new RuntimeException("Error on add package to pom.xml");
+            throw new RuntimeException("Error on adding package to pom.xml: " + e.getMessage());
         }
+    }
+
+    private boolean dependencyExists(Element dependenciesElement, String name, String version) {
+        List<Element> dependencies = dependenciesElement.getChildren("dependency", dependenciesElement.getNamespace());
+        for (Element dependency : dependencies) {
+            String existingGroupId = dependency.getChildText("groupId", dependenciesElement.getNamespace());
+            String existingArtifactId = dependency.getChildText("artifactId", dependenciesElement.getNamespace());
+            String existingVersion = dependency.getChildText("version", dependenciesElement.getNamespace());
+
+            if (existingGroupId != null && existingArtifactId != null && existingVersion != null) {
+                if (existingGroupId.equals(name) && existingArtifactId.equals(name) && existingVersion.equals(version)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private Element addNewDependency(Element projectElement, String name, String jarFilePath) {
