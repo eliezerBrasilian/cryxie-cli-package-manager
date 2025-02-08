@@ -28,7 +28,7 @@ public class UninstallJavaPackageCommand implements Runnable {
             manager.uninstallDependency();
         } catch (FileNotFoundException e) {
             System.err.print("Was not possible to uninstall completely the dependency: " + e.getMessage());
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

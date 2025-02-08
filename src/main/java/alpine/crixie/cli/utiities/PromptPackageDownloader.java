@@ -17,9 +17,6 @@ public class PromptPackageDownloader extends JavaPackageInstallerBase {
         super(packageName, version);
     }
 
-    public record PasscodeRequest(String pass_code) {
-    }
-
     @Override
     protected void downloadPackageRecursively(String packageName, String version, Set<String> downloadedPackages)
             throws IOException, InterruptedException {

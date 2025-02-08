@@ -26,7 +26,7 @@ public class DependencyManager {
         this.dependencyRemoverContract = dependencyRemoverContract;
     }
 
-    public void uninstallDependency() throws IOException {
+    public void uninstallDependency() throws IOException, InterruptedException {
         dependencyRemoverContract.removeFromPomXmlFile();
         dependencyRemoverContract.removePackageFromLuaFile();
         dependencyRemoverContract.removePackageFromCryxieLibsDirectory();

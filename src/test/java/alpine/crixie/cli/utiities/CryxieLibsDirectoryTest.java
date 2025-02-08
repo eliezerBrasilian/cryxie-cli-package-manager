@@ -44,7 +44,7 @@ public class CryxieLibsDirectoryTest {
     }
 
     @Test
-    public void remove() throws IOException {
+    public void remove() throws IOException, InterruptedException {
         new CryxieLibsDirectory()
                 .jarFileName("gson")
                 .remove();

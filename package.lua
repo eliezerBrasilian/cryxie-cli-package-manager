@@ -1,13 +1,14 @@
 -- Config related to your package
 
-Name = "alfa"
-DirectoryWhereMainFileIs = "alpine.cryxie.cli.Main"
+Name = "alfa_beta"
+DirectoryWhereMainFileIs = "alpine.cryxie.cli.meta.Main"
 Description = ""
 Version = "0.0.1"
 RepositoryUrl = ""
 
 Dependencies = {
-  ["joao"] = "1.0.1",
+    ["guga-reader-5"] = "1.0.1",
+    ["alfa"] = "0.0.1",
 }
 
-Visibility = "public"
+Visibility = "private"

@@ -8,6 +8,6 @@ public interface DependencyRemoverContract {
 
     void removePackageFromLuaFile() throws FileNotFoundException;
 
-    void removePackageFromCryxieLibsDirectory() throws IOException;
+    void removePackageFromCryxieLibsDirectory() throws IOException, InterruptedException;
 }
 

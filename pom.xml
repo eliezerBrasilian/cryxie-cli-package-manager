@@ -6,6 +6,14 @@
     <artifactId>cryxie-cli</artifactId>
     <version>1.0</version>
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -49,6 +57,20 @@
             <version>latest</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/cryxie_libs/escritor.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>guga-reader-5</groupId>
+            <artifactId>guga-reader-5</artifactId>
+            <version>1.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/cryxie_libs/guga-reader-5@1.0.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>alfa</groupId>
+            <artifactId>alfa</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/cryxie_libs/alfa@0.0.1.jar</systemPath>
         </dependency>
     </dependencies>
     <build>

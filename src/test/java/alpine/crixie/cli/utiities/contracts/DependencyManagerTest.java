@@ -9,18 +9,22 @@ import java.io.IOException;
 public class DependencyManagerTest {
 
     @Test
-    public void uninstallDependency() throws IOException {
+    public void uninstallDependency() throws IOException, InterruptedException {
         var manager = new DependencyManager(new DependencyRemoverContractImpl(
-                new SearchArrumer("guga-reader-5@1.0.1")
+                new SearchArrumer("alfa")
         ));
         manager.uninstallDependency();
     }
 
     @Test
-    public void installDependencyFromPrompt() {
+    public void installDependencyFromPrompt() throws IOException {
+        var manager = new DependencyManager(new SearchArrumer("alfa"));
+        manager.installDependencyFromPrompt();
     }
 
     @Test
-    public void installDependenciesFromLuaPackageFile() {
+    public void installDependenciesFromLuaPackageFile() throws IOException {
+        var manager = new DependencyManager();
+        manager.installDependenciesFromLuaPackageFile();
     }
 }

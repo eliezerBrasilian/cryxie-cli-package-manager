@@ -21,7 +21,8 @@ public class Mocks {
                 "1.0.0",
                 List.of(new PackageRequestDto.Dependency("pacote1", "1.0.1")),
                 PackageRequestDto.Type.JAVA,
-                PackageRequestDto.Visibility.PUBLIC
+                PackageRequestDto.Visibility.PUBLIC,
+                ""
         );
     }
 
@@ -36,7 +37,8 @@ public class Mocks {
                 "1.0.1",
                 List.of(),
                 PackageRequestDto.Type.JAVA,
-                PackageRequestDto.Visibility.PUBLIC
+                PackageRequestDto.Visibility.PUBLIC,
+                ""
         );
     }
 }

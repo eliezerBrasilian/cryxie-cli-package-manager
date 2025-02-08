@@ -1,6 +1,7 @@
 package alpine.crixie.cli.commands;
 
 import alpine.crixie.cli.utiities.contracts.upload_package.UploadPackageImpl;
+import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -73,6 +74,19 @@ public class UploadJavaPackageCommand implements Runnable {
 
         var packageRequestDto = getPackageData();
 
+        var s = new Scanner(System.in);
+        var passcode = "";
+
+        if (packageRequestDto.getVisibility().equals(PackageRequestDto.Visibility.PRIVATE)) {
+            do {
+                System.out.println("type a passcode to use in your package: ");
+                passcode = s.nextLine();
+
+            } while (passcode.isBlank());
+        }
+
+        packageRequestDto.setAccessToken(passcode);
+        int x = 2;
         uploadPackageImpl.sendPackage(packageRequestDto);
     }
 }

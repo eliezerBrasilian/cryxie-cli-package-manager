@@ -26,7 +26,8 @@ public class Utils {
                 data.version(),
                 data.deps(),
                 PackageRequestDto.Type.JAVA,
-                PackageRequestDto.Visibility.PUBLIC
+                data.visibility(),
+                ""
         );
     }
 

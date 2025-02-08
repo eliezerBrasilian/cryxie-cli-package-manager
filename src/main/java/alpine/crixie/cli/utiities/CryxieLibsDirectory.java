@@ -39,36 +39,28 @@ public class CryxieLibsDirectory {
      * @throws FileNotFoundException if the specified file is not found in the "cryxie_libs" directory.
      * @throws RuntimeException      if the file exists but cannot be deleted.
      */
-    public void remove() throws IOException {
+    public void remove() throws IOException, InterruptedException {
+
+        Thread.sleep(2000);
 
         findJarWithName().forEach(jar -> {
             String jarFilePath = "cryxie_libs".concat(File.separator) + jar;
             File jarFile = new File(jarFilePath);
 
-            while (true) {
-                try {
-                    if (jarFile.exists()) {
-                        if (jarFile.delete()) {
-                            System.out.println("File " + jarName + " was successfully uninstalled.");
-                            break;
-                        } else {
-                            throw new RuntimeException("Could not delete file (try again): " + jarName);
-                        }
+            try {
+                if (jarFile.exists()) {
+                    if (jarFile.delete()) {
+                        System.out.println("Package " + jarName + " was successfully uninstalled.");
                     } else {
-                        System.out.println("Package " + jarName + " does not exist.");
-                        break;
+                        throw new RuntimeException("Could not delete package from cryxie_libs (try again): " + jarName);
                     }
-                } catch (RuntimeException e) {
-                    System.err.println("An error occurred while trying to delete the file: " + e.getMessage());
-
-                    try {
-                        Thread.sleep(1000); // Aguarda 1 segundo antes de tentar novamente
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                        throw new RuntimeException("Thread interrupted during retry", ex);
-                    }
+                } else {
+                    System.out.println("Package " + jarName + " does not exist in cryxie_libs");
                 }
+            } catch (RuntimeException e) {
+                System.err.println("An error occurred while trying to uninstall the package from cryxie_libs: " + e.getMessage());
             }
+
         });
     }
 

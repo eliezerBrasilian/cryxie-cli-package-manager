@@ -29,7 +29,7 @@ public class DependencyRemoverContractImpl implements DependencyRemoverContract 
     }
 
     @Override
-    public void removePackageFromCryxieLibsDirectory() throws IOException {
+    public void removePackageFromCryxieLibsDirectory() throws IOException, InterruptedException {
         new CryxieLibsDirectory().
                 jarFileName(searchArrumer.getPesquisa())
                 .remove();

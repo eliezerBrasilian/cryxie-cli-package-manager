@@ -59,6 +59,10 @@ public class PackageRequest {
                 .fromJsonToTargetClass(response.body(), new TypeReference<>() {
                 });
 
+        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.OK)) {
+            System.out.println(mappedResponse.message());
+        }
+
         if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
             new Authenticator().login();
         } else if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)) {
