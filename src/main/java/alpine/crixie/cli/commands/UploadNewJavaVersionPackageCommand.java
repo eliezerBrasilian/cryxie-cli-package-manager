@@ -30,14 +30,7 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
                 new Authenticator()
                         .login();
             } else {
-                int statusCode = manager.sendNewVersion(packageRequestDto);
-                if (statusCode == 200) {
-                    System.out.println("new version was added");
-                }
-                if (statusCode == 500) {
-                    System.out.println("Already exists a version with this identifier: 0.0.1");
-                    System.out.println("Did you try change the version in package.lua file?");
-                }
+                manager.sendNewVersion(packageRequestDto);
             }
 
         } catch (FileNotFoundException | RuntimeException e) {

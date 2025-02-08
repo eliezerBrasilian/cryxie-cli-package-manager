@@ -1,56 +1,42 @@
 package alpine.crixie.cli.utiities.contracts.upload_package;
 
-import alpine.crixie.cli.utiities.JarGenerator_v2;
-import alpine.crixie.cli.utiities.PackageLuaModifier;
+import alpine.crixie.cli.utiities.JarSelector;
 import alpine.crixie.cli.utiities.requests.PackageRequest;
 import alpine.crixie.cli.utiities.requests.dtos.NewVersionRequestDto;
-import alpine.crixie.cli.utiities.requests.dtos.PackageRequestDto;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.Optional;
 
 public class UploadPackageManager {
     private final UploadPackageContract uploadPackageContract;
+
 
     public UploadPackageManager(UploadPackageContract uploadPackageContract) {
         this.uploadPackageContract = uploadPackageContract;
     }
 
-    public void sendPackage(PackageRequestDto packageRequestDto) {
-        try {
-            System.out.println("starting building project");
-            uploadPackageContract.generateJar();
-
-            System.out.println("jar was generated successfully");
-            uploadPackageContract.obtainReadmePath();
-
-            System.out.println("readme file was obtained");
-            uploadPackageContract.sendPackage(packageRequestDto);
-        } catch (ConnectException e) {
-            throw new RuntimeException("can't send package looks like server is busy or off");
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public int sendNewVersion(
+    public void sendNewVersion(
             NewVersionRequestDto newVersionRequestDto
     ) {
         try {
-            System.out.println("starting building project");
+            Optional<File> optionalJar = new JarSelector().select();
 
-            JarGenerator_v2 generator = new JarGenerator_v2(new PackageLuaModifier());
-            generator.generateJar();
+            optionalJar.ifPresent(file -> {
+                try {
+                    new PackageRequest().sendNewVersion(
+                            newVersionRequestDto, file);
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
-            System.out.println("jar was generated successfully");
-            var jarFile = generator.getJarFile();
-
-            return new PackageRequest().sendNewVersion(
-                    newVersionRequestDto, jarFile).statusCode();
         } catch (ConnectException e) {
             throw new RuntimeException("can't send package looks like server is busy or off");
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

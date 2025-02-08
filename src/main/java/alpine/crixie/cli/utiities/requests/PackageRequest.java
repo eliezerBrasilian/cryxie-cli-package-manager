@@ -52,28 +52,8 @@ public class PackageRequest {
         }
     }
 
-    private void processResponse(HttpResponse<String> response) throws JsonProcessingException {
-        int statusCode = response.statusCode();
-
-        var mappedResponse = new JsonMapper<BaseResponse<String>>()
-                .fromJsonToTargetClass(response.body(), new TypeReference<>() {
-                });
-
-        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.OK)) {
-            System.out.println(mappedResponse.message());
-        }
-
-        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
-            new Authenticator().login();
-        } else if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)) {
-            System.out.println(mappedResponse.data());
-        } else {
-            System.err.println(mappedResponse.data());
-        }
-    }
-
-    public HttpResponse<String> sendNewVersion(NewVersionRequestDto newVersionRequestDto,
-                                               File jarFile) throws IOException, InterruptedException {
+    public void sendNewVersion(NewVersionRequestDto newVersionRequestDto,
+                               File jarFile) throws IOException, InterruptedException {
         String url = BASE_URL + "/package/add-new-version";
 
         String json = new JsonMapper<>(newVersionRequestDto).toJson();
@@ -89,7 +69,26 @@ public class PackageRequest {
                 .POST(bodyWithMultipartData(jarFile, json))
                 .build();
 
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        processResponse(response);
+    }
+
+    private void processResponse(HttpResponse<String> response) throws JsonProcessingException {
+        int statusCode = response.statusCode();
+
+        var mappedResponse = new JsonMapper<BaseResponse<String>>()
+                .fromJsonToTargetClass(response.body(), new TypeReference<>() {
+                });
+
+        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.OK) ||
+                Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)
+        ) {
+            System.out.println(mappedResponse.message());
+        } else if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
+            new Authenticator().login();
+        } else {
+            System.err.println(mappedResponse.data());
+        }
     }
 
     public HttpResponse<String> download(String packageName, String version, String passCode) throws IOException {

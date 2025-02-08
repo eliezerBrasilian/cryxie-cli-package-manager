@@ -3,7 +3,7 @@
 Name = "alfa_beta"
 DirectoryWhereMainFileIs = "alpine.cryxie.cli.meta.Main"
 Description = ""
-Version = "0.0.1"
+Version = "0.0.3"
 RepositoryUrl = ""
 
 Dependencies = {
