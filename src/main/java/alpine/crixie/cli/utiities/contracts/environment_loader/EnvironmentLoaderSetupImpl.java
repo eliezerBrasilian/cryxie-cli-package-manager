@@ -2,6 +2,7 @@ package alpine.crixie.cli.utiities.contracts.environment_loader;
 
 import alpine.crixie.cli.utiities.GitIgnoreGenerator;
 import alpine.crixie.cli.utiities.IntellijCryxieXmlManager;
+import alpine.crixie.cli.utiities.ReadmeGenerator;
 import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 
 import java.io.IOException;
@@ -20,5 +21,10 @@ public class EnvironmentLoaderSetupImpl implements EnvironmentLoaderSetupContrac
     @Override
     public void loadIntellijIdeaCryxieLibraryFolder() {
         new GitIgnoreGenerator().generate();
+    }
+
+    @Override
+    public void loadReadmeFile() {
+        new ReadmeGenerator().generate();
     }
 }

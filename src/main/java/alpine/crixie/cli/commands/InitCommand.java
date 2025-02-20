@@ -8,16 +8,10 @@ import picocli.CommandLine;
 import java.io.File;
 import java.util.Scanner;
 
-@CommandLine.Command(
-        name = "init",
-        description = "Initialize a project with the package.lua file"
-)
+@CommandLine.Command(name = "init", description = "Initialize a project with the package.lua file")
 public class InitCommand implements Runnable {
 
-    @CommandLine.Option(
-            names = {"-skip"},
-            description = "Creates package.lua file with default values."
-    )
+    @CommandLine.Option(names = { "-skip" }, description = "Creates package.lua file with default values.")
     private boolean skip;
 
     private static void createCryxieLibsDirectory() {
@@ -46,6 +40,8 @@ public class InitCommand implements Runnable {
 
         System.out.print("Enter the url of your project repository : ");
         String repoUrl = scanner.nextLine();
+
+        scanner.close();
 
         new PackageLuaComponent(name, packageName, version, repoUrl, desc);
     }

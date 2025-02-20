@@ -8,4 +8,6 @@ public interface EnvironmentLoaderSetupContract {
     void loadGitIgnoreFile() throws IOException;
 
     void loadIntellijIdeaCryxieLibraryFolder();
+
+    void loadReadmeFile();
 }

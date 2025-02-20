@@ -1,6 +1,6 @@
 -- Config related to your package
 
-Name = "alfa_beta"
+Name = "crixie_cli"
 DirectoryWhereMainFileIs = "alpine.cryxie.cli.meta.Main"
 Description = ""
 Version = "0.0.3"
