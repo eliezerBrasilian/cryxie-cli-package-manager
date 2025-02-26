@@ -6,12 +6,8 @@ import picocli.CommandLine;
 public class Main {
     public static void main(String[] args) {
 
-        @CommandLine.Command(
-                name = "cryxie", //bat file
-                description = "Crixie CLI - User Friendly Java Package Manager",
-                mixinStandardHelpOptions = true,
-                version = "1.0.0",
-                subcommands = {
+        @CommandLine.Command(name = "cryxie", // bat file
+                description = "Crixie CLI - User Friendly Java Package Manager", mixinStandardHelpOptions = true, version = "1.0.0", subcommands = {
                         InstallPackageCommand.class,
                         InitCommand.class,
                         CommandLine.HelpCommand.class,
@@ -22,8 +18,7 @@ public class Main {
                         UploadJavaPackageCommand.class,
                         RunJavaPackageCommand.class,
                         BuildJavaPackageMvnCommand.class
-                }
-        )
+                })
         class CliCommand implements Runnable {
 
             @Override
@@ -32,7 +27,9 @@ public class Main {
             }
         }
 
-        int exitCode = new CommandLine(new CliCommand()).execute(args);
+        var args_ = new String[] { "deploy" };
+
+        int exitCode = new CommandLine(new CliCommand()).execute(args_);
         System.exit(exitCode);
     }
 }

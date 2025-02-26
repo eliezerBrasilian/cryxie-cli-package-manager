@@ -41,7 +41,7 @@ public class Authenticator {
 
             String body = new JsonMapper<>()
                     .fromFields(Map.entry("email", "alpinistamestre@yahoo.com"),
-                            Map.entry("password", "12345"))
+                            Map.entry("password", "12345678"))
                     .toJson();
 
             var request = HttpRequest.newBuilder(new URI(Utils.BASE_URL + "/auth/login"))
@@ -61,18 +61,23 @@ public class Authenticator {
 
     private void processResponse(HttpResponse<String> response) throws JsonProcessingException {
         String responseJson = response.body();
+        int status = response.statusCode();
 
-        if (Utils.StatusCode.fromCode(response.statusCode()) == Utils.StatusCode.OK) {
+        if (Utils.StatusCode.fromCode(status).isOK()) {
             saveToken(response.body());
+            return;
+        } else if (Utils.StatusCode.fromCode(status).isExpectationFailed()) {
+            System.out.println("account not found or password is invalid");
+            return;
         } else {
-            var responseMapped = new JsonMapper<BaseResponse<Object>>().fromJsonToTargetClass(responseJson, new TypeReference<>() {
-            });
+            var responseMapped = new JsonMapper<BaseResponse<Object>>().fromJsonToTargetClass(responseJson,
+                    new TypeReference<>() {
+                    });
             throw new RuntimeException(responseMapped.message());
         }
     }
 
-    private void saveToken(String body
-    ) throws JsonProcessingException {
+    private void saveToken(String body) throws JsonProcessingException {
 
         record AuthResponseDto(
                 @JsonProperty("profile_picture") String profilePicture,

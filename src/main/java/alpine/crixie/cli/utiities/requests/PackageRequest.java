@@ -29,7 +29,7 @@ public class PackageRequest {
     final private String boundary = "----WebKitFormBoundary" + UUID.randomUUID();
 
     public void send(PackageRequestDto packageRequestDto,
-                     File readmeFile, File jarFile) throws IOException, InterruptedException {
+            File readmeFile, File jarFile) throws IOException, InterruptedException {
         String packageJson = new JsonMapper<>(packageRequestDto).toJson();
 
         String bearerToken = new LocalStorage().getData().token();
@@ -53,7 +53,7 @@ public class PackageRequest {
     }
 
     public void sendNewVersion(NewVersionRequestDto newVersionRequestDto,
-                               File jarFile) throws IOException, InterruptedException {
+            File jarFile) throws IOException, InterruptedException {
         String url = BASE_URL + "/package/add-new-version";
 
         String json = new JsonMapper<>(newVersionRequestDto).toJson();
@@ -81,8 +81,7 @@ public class PackageRequest {
                 });
 
         if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.OK) ||
-                Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)
-        ) {
+                Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)) {
             System.out.println(mappedResponse.message());
         } else if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
             new Authenticator().login();
@@ -118,12 +117,13 @@ public class PackageRequest {
         return response;
     }
 
-    private HttpRequest.BodyPublisher bodyWithMultipartData(File readmeFile, File jarFile, String packageJson) throws IOException {
+    private HttpRequest.BodyPublisher bodyWithMultipartData(File readmeFile, File jarFile, String packageJson)
+            throws IOException {
         var parts = List.of(
                 new Part("package", null, "application/json", packageJson.getBytes()),
                 new Part("readme_file", readmeFile.getName(), "text/plain", Files.readAllBytes(readmeFile.toPath())),
-                new Part("jar_file", jarFile.getName(), "application/java-archive", Files.readAllBytes(jarFile.toPath()))
-        );
+                new Part("jar_file", jarFile.getName(), "application/java-archive",
+                        Files.readAllBytes(jarFile.toPath())));
 
         return ofMimeMultipartData(parts, boundary);
     }
@@ -131,8 +131,8 @@ public class PackageRequest {
     private HttpRequest.BodyPublisher bodyWithMultipartData(File jarFile, String packageJson) throws IOException {
         var parts = List.of(
                 new Part("version", null, "application/json", packageJson.getBytes()),
-                new Part("jar_file", jarFile.getName(), "application/java-archive", Files.readAllBytes(jarFile.toPath()))
-        );
+                new Part("jar_file", jarFile.getName(), "application/java-archive",
+                        Files.readAllBytes(jarFile.toPath())));
 
         return ofMimeMultipartData(parts, boundary);
     }

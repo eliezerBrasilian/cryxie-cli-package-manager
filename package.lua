@@ -11,4 +11,4 @@ Dependencies = {
     ["alfa"] = "0.0.1",
 }
 
-Visibility = "private"
+Visibility = "public"

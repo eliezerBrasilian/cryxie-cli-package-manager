@@ -50,6 +50,8 @@ public class UploadJavaPackageCommand implements Runnable {
             } while (passcode.isBlank());
         }
 
+        s.close();
+
         packageRequestDto.setAccessToken(passcode);
 
         uploadPackageImpl.sendPackage(packageRequestDto);
