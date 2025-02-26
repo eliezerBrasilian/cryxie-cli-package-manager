@@ -11,10 +11,7 @@ import picocli.CommandLine;
 
 import java.io.FileNotFoundException;
 
-@CommandLine.Command(
-        name = "upload-new-version",
-        description = "Upload a specified package."
-)
+@CommandLine.Command(name = "deploy-new-version", description = "Upload a specified package.")
 public class UploadNewJavaVersionPackageCommand implements Runnable {
 
     @Override
@@ -49,8 +46,7 @@ public class UploadNewJavaVersionPackageCommand implements Runnable {
                 data.version(),
                 data.deps(),
                 userId,
-                PackageRequestDto.Type.JAVA
-        );
+                PackageRequestDto.Type.JAVA);
     }
 
 }

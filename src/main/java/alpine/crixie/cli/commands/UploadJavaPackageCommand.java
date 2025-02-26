@@ -12,22 +12,16 @@ import java.util.Scanner;
 
 import static alpine.crixie.cli.utiities.Utils.getPackageData;
 
-@CommandLine.Command(
-        name = "upload",
-        description = "upload java project to cryxie repositories"
-)
+@CommandLine.Command(name = "deploy", description = "upload java project to cryxie repositories")
 public class UploadJavaPackageCommand implements Runnable {
 
     @Override
     public void run() {
         try {
             Optional<File> optionalJar = new JarSelector().select();
-
             if (optionalJar.isPresent()) {
                 uploadFile(optionalJar.get());
             }
-
-
         } catch (IOException e) {
             System.err.println("Error reading the build directory: " + e.getMessage());
         } catch (InterruptedException e) {
@@ -61,4 +55,3 @@ public class UploadJavaPackageCommand implements Runnable {
         uploadPackageImpl.sendPackage(packageRequestDto);
     }
 }
-
