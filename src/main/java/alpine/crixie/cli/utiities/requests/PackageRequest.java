@@ -80,10 +80,10 @@ public class PackageRequest {
                 .fromJsonToTargetClass(response.body(), new TypeReference<>() {
                 });
 
-        if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.OK) ||
-                Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.CREATED)) {
+        if (Utils.StatusCode.fromCode(statusCode).isOK() ||
+                Utils.StatusCode.fromCode(statusCode).isCreated()) {
             System.out.println(mappedResponse.message());
-        } else if (Utils.StatusCode.fromCode(statusCode).equals(Utils.StatusCode.FORBIDDEN)) {
+        } else if (Utils.StatusCode.fromCode(statusCode).isForbidden()) {
             new Authenticator().login();
         } else {
             System.err.println(mappedResponse.data());

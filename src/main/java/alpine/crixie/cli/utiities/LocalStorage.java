@@ -8,6 +8,9 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class LocalStorage {
     private Globals globals;
@@ -17,11 +20,15 @@ public class LocalStorage {
     private String userId;
 
     private final String FILE_NAME = "local_storage.lua";
+    private final Path filePath;
     private final InitialDataComponent initialDataComponent = new InitialDataComponent();
 
     public LocalStorage() {
-        File luaFile = new File(FILE_NAME);
-        if (!luaFile.exists()) {
+        String appData = System.getenv("APPDATA");
+        Path directory = Paths.get(appData, "cryxie");
+        this.filePath = directory.resolve(FILE_NAME);
+
+        if (!Files.exists(filePath)) {
             createFileIfNotExists();
         } else {
             load();
@@ -29,24 +36,26 @@ public class LocalStorage {
     }
 
     private void createFileIfNotExists() {
-        String currentDir = System.getProperty("user.dir");
-        File newFile = new File(currentDir, FILE_NAME);
+        try {
+            if (!Files.exists(filePath.getParent())) {
+                Files.createDirectories(filePath.getParent());
+            }
 
-        try (var writer = new FileWriter(newFile)) {
-            writer.write(
-                    initialDataComponent.localStorageComponent()
-            );
+            if (!Files.exists(filePath)) {
+                try (var writer = new FileWriter(filePath.toFile())) {
+                    writer.write(initialDataComponent.localStorageComponent());
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void load() throws RuntimeException {
         try {
             globals = JsePlatform.standardGlobals();
 
-            LuaValue chunk = globals.load(new FileInputStream(FILE_NAME),
+            LuaValue chunk = globals.load(new FileInputStream(filePath.toFile()),
                     FILE_NAME, "t", globals);
             chunk.call();
 
@@ -85,21 +94,16 @@ public class LocalStorage {
     }
 
     private void saveChangesAtLuaFile() {
-        File luaFile = new File(FILE_NAME);
-
-        if (!luaFile.exists()) {
+        if (!Files.exists(filePath)) {
             createFileIfNotExists();
         }
+
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(getLuaFilePath()), StandardCharsets.UTF_8))) {
+                new FileOutputStream(filePath.toFile()), StandardCharsets.UTF_8))) {
             writer.write(content());
         } catch (IOException e) {
-            throw new RuntimeException("Error on save data at local storage: " + e.getMessage());
+            throw new RuntimeException("Error saving data to local storage: " + e.getMessage());
         }
-    }
-
-    private String getLuaFilePath() {
-        return new File(FILE_NAME).getPath();
     }
 
     private String content() {
@@ -114,7 +118,9 @@ public class LocalStorage {
         if (userId == null) {
             return new Data();
         }
-        return new Data(token, decoder.decode(profilePicture), decoder.decode(name), decoder.decode(userId));
+        // return new Data(token, decoder.decode(profilePicture), decoder.decode(name),
+        // decoder.decode(userId));
+        return new Data(token, profilePicture, name, userId);
     }
 
     public record Data(String token, String profilePicture, String name, String userId) {
@@ -123,4 +129,3 @@ public class LocalStorage {
         }
     }
 }
-
