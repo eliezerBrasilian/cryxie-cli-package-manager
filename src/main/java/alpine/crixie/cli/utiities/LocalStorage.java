@@ -36,9 +36,23 @@ public class LocalStorage {
     }
 
     private void createFileIfNotExists() {
+        String appData;
+
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            appData = System.getenv("APPDATA");
+        } else {
+            appData = System.getenv("XDG_CONFIG_HOME");
+            if (appData == null || appData.isBlank()) {
+                appData = System.getProperty("user.home") + "/.config";
+            }
+        }
+
+        Path directory = Paths.get(appData, "cryxie");
+        Path filePath = directory.resolve(FILE_NAME);
+
         try {
-            if (!Files.exists(filePath.getParent())) {
-                Files.createDirectories(filePath.getParent());
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
             }
 
             if (!Files.exists(filePath)) {
