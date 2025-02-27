@@ -65,7 +65,8 @@ public class LocalStorage {
             userId = getLuaString("UserId");
 
         } catch (Exception e) {
-            throw new RuntimeException("Error loading localStorage", e);
+            createFileIfNotExists();
+            updateData(new Data("", "", "", ""));
         }
     }
 
@@ -120,7 +121,7 @@ public class LocalStorage {
         }
         // return new Data(token, decoder.decode(profilePicture), decoder.decode(name),
         // decoder.decode(userId));
-        return new Data(token, profilePicture, name, userId);
+        return new Data(token, profilePicture, name, decoder.decode(userId));
     }
 
     public record Data(String token, String profilePicture, String name, String userId) {

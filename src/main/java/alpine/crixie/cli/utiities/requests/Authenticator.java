@@ -81,7 +81,6 @@ public class Authenticator {
 
         record AuthResponseDto(
                 @JsonProperty("profile_picture") String profilePicture,
-                @JsonProperty("is_membership") boolean isMembership,
                 @JsonProperty("token") String token,
                 @JsonProperty("name") String name,
                 @JsonProperty("user_id") String userId) {

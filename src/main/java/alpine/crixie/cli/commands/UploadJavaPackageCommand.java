@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 import static alpine.crixie.cli.utiities.Utils.getPackageData;
 
-@CommandLine.Command(name = "deploy", description = "upload java project to cryxie repositories")
+@CommandLine.Command(name = "deploy", description = "deploy java package to cryxie repositories")
 public class UploadJavaPackageCommand implements Runnable {
 
     @Override
