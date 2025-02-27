@@ -21,23 +21,22 @@ import java.util.Scanner;
 public class Authenticator {
     public void login() {
         try {
-            int x = -1;
-            if (x == 10) {
-                Scanner input = new Scanner(System.in);
+            Scanner input = new Scanner(System.in);
 
-                System.out.print("Please enter your email: ");
-                String email = input.nextLine().trim();
+            System.out.print("Please enter your email: ");
+            String email = input.nextLine().trim();
 
-                System.out.print("Please enter your password: ");
-                String pass = input.nextLine().trim();
+            System.out.print("Please enter your password: ");
+            String pass = input.nextLine().trim();
 
-                if (email.isEmpty() || pass.isEmpty()) {
-                    System.out.println("You have to enter your email and password created at cryxie.com :(");
-                    return;
-                }
-                System.out.println("please wait...");
+            if (email.isEmpty() || pass.isEmpty()) {
+                System.out.println("You have to enter your email and password created at cryxie.com :(");
                 input.close();
+                return;
             }
+
+            System.out.println("please wait...");
+            input.close();
 
             String body = new JsonMapper<>()
                     .fromFields(Map.entry("email", "alpinistamestre@yahoo.com"),
