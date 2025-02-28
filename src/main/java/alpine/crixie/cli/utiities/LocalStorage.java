@@ -16,7 +16,6 @@ public class LocalStorage {
     private Globals globals;
     private String token;
     private String name;
-    private String profilePicture;
     private String userId;
 
     private final String FILE_NAME = "local_storage.lua";
@@ -74,13 +73,12 @@ public class LocalStorage {
             chunk.call();
 
             name = getLuaString("Name");
-            profilePicture = getLuaString("ProfilePicture");
             token = getLuaString("Token");
             userId = getLuaString("UserId");
 
         } catch (Exception e) {
             createFileIfNotExists();
-            updateData(new Data("", "", "", ""));
+            updateData(new Data("", "", ""));
         }
     }
 
@@ -100,7 +98,6 @@ public class LocalStorage {
 
         this.token = data.token;
         this.name = data.name;
-        this.profilePicture = data.profilePicture;
         this.userId = data.userId;
 
         globals.set("Token", LuaString.valueOf(token));
@@ -124,7 +121,6 @@ public class LocalStorage {
     private String content() {
         return "Token = \"" + token + "\"\n" +
                 "Name = \"" + name + "\"\n" +
-                "ProfilePicture = \"" + profilePicture + "\"\n" +
                 "UserId = \"" + userId + "\"\n";
     }
 
@@ -135,12 +131,12 @@ public class LocalStorage {
         }
         // return new Data(token, decoder.decode(profilePicture), decoder.decode(name),
         // decoder.decode(userId));
-        return new Data(token, profilePicture, name, decoder.decode(userId));
+        return new Data(token, name, decoder.decode(userId));
     }
 
-    public record Data(String token, String profilePicture, String name, String userId) {
+    public record Data(String token, String name, String userId) {
         public Data() {
-            this("", "", "", "");
+            this("", "", "");
         }
     }
 }

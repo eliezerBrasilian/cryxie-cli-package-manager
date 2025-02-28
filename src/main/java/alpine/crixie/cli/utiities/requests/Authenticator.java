@@ -79,7 +79,6 @@ public class Authenticator {
     private void saveToken(String body) throws JsonProcessingException {
 
         record AuthResponseDto(
-                @JsonProperty("profile_picture") String profilePicture,
                 @JsonProperty("token") String token,
                 @JsonProperty("name") String name,
                 @JsonProperty("user_id") String userId) {
@@ -90,7 +89,7 @@ public class Authenticator {
                 });
 
         new LocalStorage().updateData(
-                new LocalStorage.Data(mapped.data().token(), mapped.data().profilePicture(),
+                new LocalStorage.Data(mapped.data().token(),
                         mapped.data().name(), mapped.data().userId()));
 
         System.out.println("Now you're logged in, try perform your operation again:)");
