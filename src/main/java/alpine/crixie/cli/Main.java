@@ -27,11 +27,11 @@ public class Main {
             }
         }
 
-        var args_ = new String[] { "deploy" };
+        // var args_ = new String[] { "deploy" };
 
-        int exitCode = new CommandLine(new CliCommand()).execute(args_);
+        // int exitCode = new CommandLine(new CliCommand()).execute(args_);
 
-        // int exitCode = new CommandLine(new CliCommand()).execute(args);
+        int exitCode = new CommandLine(new CliCommand()).execute(args);
         System.exit(exitCode);
     }
 }

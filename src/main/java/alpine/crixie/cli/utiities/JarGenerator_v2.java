@@ -1,17 +1,17 @@
 package alpine.crixie.cli.utiities;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.stream.Stream;
 
 public class JarGenerator_v2 {
     private static final String BUILD_DIR = "build";
-    private static final String CLASSES_DIR = BUILD_DIR.concat(File.separator).concat("classes");
-    private static final String MANIFEST_PATH = BUILD_DIR.concat(File.separator).concat("META-INF")
-            .concat(File.separator).concat("MANIFEST.MF");
+    private static final String CLASSES_DIR = BUILD_DIR + File.separator + "classes";
+    private static final String MANIFEST_PATH = BUILD_DIR + File.separator + "META-INF"
+            + File.separator + "MANIFEST.MF";
+    public static final String LIB_PATH = "cryxie_libs";
+    public static final String SRC_PATH = "src" + File.separator + "main" + File.separator + "java";
 
     private File jarFile;
     private final PackageLuaModifier.PackageData packageMetaData;
@@ -32,71 +32,86 @@ public class JarGenerator_v2 {
         // Garante que os diretórios necessários existam
         new File(BUILD_DIR).mkdirs();
         new File(CLASSES_DIR).mkdirs();
-        new File(BUILD_DIR.concat(File.separator).concat("META-INF")).mkdirs();
+        new File(BUILD_DIR + File.separator + "META-INF").mkdirs();
 
-        // 🔹 1. Compilar os arquivos Java para build/classes
+        // 1. Compilar os arquivos Java para build/classes
         compileJavaSources();
 
-        // 🔹 2. Criar o arquivo MANIFEST.MF
+        // 2. Copiar arquivos adicionais (não .java) de SRC_PATH para CLASSES_DIR
+        copyAdditionalFiles();
+
+        // 3. Criar o arquivo MANIFEST.MF
         generateManifest(mainClass);
 
-        // 🔹 3. Criar o JAR
+        // 4. Criar o JAR
         createJar();
     }
 
     private void compileJavaSources() throws IOException, InterruptedException {
         String[] compileCommand;
-
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            // Comando para Windows (usando PowerShell)
-            compileCommand = new String[]{
+            compileCommand = new String[] {
                     "powershell.exe", "-Command",
-                    "Get-ChildItem -Path src/main/java -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
-                            "javac --release 16 -d " + CLASSES_DIR + " -sourcepath src/main/java $(Get-Content sources.txt)"
+                    "Get-ChildItem -Path " + SRC_PATH
+                            + " -Filter *.java -Recurse | ForEach-Object { $_.FullName } > sources.txt; " +
+                            "javac --release 16 -d " + CLASSES_DIR + " -sourcepath " + SRC_PATH
+                            + " $(Get-Content sources.txt)"
             };
         } else {
-            // Comando para Linux (usando shell)
-            compileCommand = new String[]{
+            compileCommand = new String[] {
                     "/bin/bash", "-c",
-                    "find src/main/java -name '*.java' > sources.txt; " +
-                            "javac --release 16 -d " + CLASSES_DIR + " -sourcepath src/main/java @sources.txt"
+                    "find " + SRC_PATH + " -name '*.java' > sources.txt; " +
+                            "javac --release 16 -d " + CLASSES_DIR + " -sourcepath " + SRC_PATH + " @sources.txt"
             };
         }
-
         runCommand(compileCommand);
     }
 
     private void generateManifest(String mainClass) throws IOException {
-        String manifestContent = "Manifest-Version: ".concat(packageMetaData.version()).concat("\n") +
+        String manifestContent = "Manifest-Version: " + packageMetaData.version() + "\n" +
                 "Main-Class: " + mainClass + "\n";
-
-        Files.write(Paths.get(MANIFEST_PATH), manifestContent.getBytes());
+        Files.write(Paths.get(MANIFEST_PATH), manifestContent.getBytes(StandardCharsets.UTF_8));
     }
 
     private void createJar() throws IOException, InterruptedException {
-        // Comando para gerar o JAR com base nas classes compiladas
         String[] jarCommand = {
                 "jar", "cfm", jarFile.getAbsolutePath(), MANIFEST_PATH, "-C", CLASSES_DIR, "."
         };
-
         runCommand(jarCommand);
+    }
+
+    private void copyAdditionalFiles() throws IOException {
+        Path srcPath = Paths.get(SRC_PATH);
+        Path targetPath = Paths.get(CLASSES_DIR);
+        try (Stream<Path> paths = Files.walk(srcPath)) {
+            paths.filter(Files::isRegularFile)
+                    .filter(path -> !path.toString().endsWith(".java"))
+                    .forEach(path -> {
+                        try {
+                            Path relativePath = srcPath.relativize(path);
+                            Path destination = targetPath.resolve(relativePath);
+                            Files.createDirectories(destination.getParent());
+                            Files.copy(path, destination, StandardCopyOption.REPLACE_EXISTING);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Error copying file: " + path, e);
+                        }
+                    });
+        }
     }
 
     private void runCommand(String[] command) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
         }
-
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new RuntimeException("Error on execute command: " + String.join(" ", command));
+            throw new RuntimeException("Error executing command: " + String.join(" ", command));
         }
     }
 
