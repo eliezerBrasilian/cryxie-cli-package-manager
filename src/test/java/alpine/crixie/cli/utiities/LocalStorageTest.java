@@ -20,7 +20,7 @@ public class LocalStorageTest {
 
         String token = "abc", profilePicture = "", name = "teste", userId = "id_123";
 
-        ls.updateData(new LocalStorage.Data(token, profilePicture, name, userId));
+        ls.updateData(new LocalStorage.Data(token, name, userId));
 
         assertEquals("abc", ls.getData().token());
     }

@@ -2,6 +2,7 @@ package alpine.crixie.cli.commands;
 
 import alpine.crixie.cli.components.PackageLuaComponent;
 import alpine.crixie.cli.utiities.GitIgnoreGenerator;
+import alpine.crixie.cli.utiities.ReadmeGenerator;
 import alpine.crixie.cli.utiities.VSCodeSettingsManager;
 import picocli.CommandLine;
 
@@ -41,8 +42,6 @@ public class InitCommand implements Runnable {
         System.out.print("Enter the url of your project repository : ");
         String repoUrl = scanner.nextLine();
 
-        scanner.close();
-
         new PackageLuaComponent(name, packageName, version, repoUrl, desc);
     }
 
@@ -56,6 +55,8 @@ public class InitCommand implements Runnable {
         createCryxieLibsDirectory();
         new VSCodeSettingsManager();
         new GitIgnoreGenerator().generate();
+        new ReadmeGenerator().generate();
+        ;
         System.out.println("Environment has been set up");
     }
 

@@ -125,13 +125,12 @@ public class LocalStorage {
     }
 
     public Data getData() {
-        var decoder = new Base64Decoder();
         if (userId == null) {
             return new Data();
         }
         // return new Data(token, decoder.decode(profilePicture), decoder.decode(name),
         // decoder.decode(userId));
-        return new Data(token, name, decoder.decode(userId));
+        return new Data(token, name, userId);
     }
 
     public record Data(String token, String name, String userId) {

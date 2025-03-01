@@ -24,10 +24,10 @@ public class Authenticator {
             Scanner input = new Scanner(System.in);
 
             System.out.print("Please enter your email: ");
-            String email = input.nextLine().trim();
+            String email = input.nextLine();
 
             System.out.print("Please enter your password: ");
-            String pass = input.nextLine().trim();
+            String pass = input.nextLine();
 
             if (email.isEmpty() || pass.isEmpty()) {
                 System.out.println("You have to enter your email and password created at cryxie.com :(");
@@ -39,8 +39,8 @@ public class Authenticator {
             input.close();
 
             String body = new JsonMapper<>()
-                    .fromFields(Map.entry("email", "alpinistamestre@yahoo.com"),
-                            Map.entry("password", "12345678"))
+                    .fromFields(Map.entry("email", email.trim()),
+                            Map.entry("password", pass.trim()))
                     .toJson();
 
             var request = HttpRequest.newBuilder(new URI(Utils.BASE_URL + "/auth/login"))
